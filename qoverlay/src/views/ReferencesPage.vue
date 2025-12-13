@@ -5,14 +5,14 @@
         <ion-buttons slot="start">
           <ion-menu-button color="primary"></ion-menu-button>
         </ion-buttons>
-        <ion-title>参考文献</ion-title>
+        <ion-title>{{ t('参考文献页面.标题') }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">参考文献</ion-title>
+          <ion-title size="large">{{ t('参考文献页面.标题') }}</ion-title>
         </ion-toolbar>
       </ion-header>
 
@@ -21,7 +21,7 @@
           <ion-col size="12" size-md="8" offset-md="2">
             <ion-card>
               <ion-card-content>
-                <h2>参考文献</h2>
+                <h2>{{ t('参考文献页面.标题') }}</h2>
                 
                 <ion-list>
                   <ion-item lines="inset" v-for="(reference, index) in references" :key="index">
@@ -61,6 +61,10 @@ import {
   IonLabel
 } from '@ionic/vue';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+// 国际化
+const { t } = useI18n();
 
 // 定义参考文献数据结构
 interface Reference {

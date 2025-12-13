@@ -5,14 +5,14 @@
         <ion-buttons slot="start">
           <ion-menu-button color="primary"></ion-menu-button>
         </ion-buttons>
-        <ion-title>反馈</ion-title>
+        <ion-title>{{ t('反馈页面.标题') }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">反馈</ion-title>
+          <ion-title size="large">{{ t('反馈页面.标题') }}</ion-title>
         </ion-toolbar>
       </ion-header>
 
@@ -21,8 +21,8 @@
           <ion-col size="12" size-md="8" offset-md="2">
             <ion-card>
               <ion-card-header>
-                <ion-card-title>发送反馈</ion-card-title>
-                <ion-card-subtitle>请告诉我们您的想法和建议</ion-card-subtitle>
+                <ion-card-title>{{ t('反馈页面.发送反馈') }}</ion-card-title>
+                <ion-card-subtitle>{{ t('反馈页面.请告诉我们') }}</ion-card-subtitle>
               </ion-card-header>
 
               <ion-card-content>
@@ -30,30 +30,30 @@
                   <ion-list>
                     <!-- 姓名输入 -->
                     <ion-item>
-                      <ion-label position="floating">姓名</ion-label>
+                      <ion-label position="floating">{{ t('反馈页面.姓名') }}</ion-label>
                       <ion-input v-model="feedback.name" required></ion-input>
                     </ion-item>
 
                     <!-- 邮箱输入 -->
                     <ion-item>
-                      <ion-label position="floating">邮箱</ion-label>
+                      <ion-label position="floating">{{ t('反馈页面.邮箱') }}</ion-label>
                       <ion-input v-model="feedback.email" type="email" required></ion-input>
                     </ion-item>
 
                     <!-- 反馈类型选择 -->
                     <ion-item>
-                      <ion-label position="floating">反馈类型</ion-label>
-                      <ion-select v-model="feedback.type" placeholder="请选择反馈类型" required>
-                        <ion-select-option value="suggestion">建议</ion-select-option>
-                        <ion-select-option value="bug"> bug 报告</ion-select-option>
-                        <ion-select-option value="question">问题</ion-select-option>
-                        <ion-select-option value="other">其他</ion-select-option>
+                      <ion-label position="floating">{{ t('反馈页面.反馈类型') }}</ion-label>
+                      <ion-select v-model="feedback.type" :placeholder="t('反馈页面.请选择反馈类型')" required>
+                        <ion-select-option value="suggestion">{{ t('反馈页面.建议') }}</ion-select-option>
+                        <ion-select-option value="bug">{{ t('反馈页面.错误报告') }}</ion-select-option>
+                        <ion-select-option value="question">{{ t('反馈页面.问题') }}</ion-select-option>
+                        <ion-select-option value="other">{{ t('反馈页面.其他') }}</ion-select-option>
                       </ion-select>
                     </ion-item>
 
                     <!-- 反馈内容输入 -->
                     <ion-item>
-                      <ion-label position="stacked">反馈内容</ion-label>
+                      <ion-label position="stacked">{{ t('反馈页面.反馈内容') }}</ion-label>
                       <ion-textarea v-model="feedback.content" :rows="6" required></ion-textarea>
                     </ion-item>
 
@@ -61,7 +61,7 @@
                     <ion-item lines="none">
                       <ion-button expand="block" type="submit" color="primary" :disabled="isSubmitting">
                         <ion-spinner v-if="isSubmitting" slot="start" name="circles"></ion-spinner>
-                        {{ isSubmitting ? '提交中...' : '提交反馈' }}
+                        {{ isSubmitting ? t('反馈页面.提交中') : t('反馈页面.提交反馈') }}
                       </ion-button>
                     </ion-item>
                   </ion-list>
@@ -75,7 +75,7 @@
       <!-- 成功提示 -->
       <ion-toast
         :is-open="showSuccessToast"
-        message="反馈提交成功！感谢您的支持。"
+        :message="t('反馈页面.提交成功')"
         color="success"
         duration="3000"
         position="bottom"
@@ -113,6 +113,10 @@ import {
   IonToast
 } from '@ionic/vue';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+// 国际化
+const { t } = useI18n();
 
 // 定义反馈数据结构
 interface Feedback {

@@ -147,7 +147,6 @@
 import {
   IonCard,
   IonCardHeader,
-  IonCardSubtitle,
   IonCardTitle,
   IonCardContent,
   IonItemDivider,
