@@ -193,7 +193,12 @@ import {
   IonSelectOption,
   IonModal,
   IonToolbar,
-  IonButtons
+  IonButtons,
+  IonHeader,
+  IonTitle,
+  IonContent,
+  IonNote,
+  IonCheckbox
 } from '@ionic/vue';
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';

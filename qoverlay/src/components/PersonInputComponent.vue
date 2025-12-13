@@ -83,8 +83,8 @@
           <h3 class="section-title">{{ t('计算页面.人员.现有人员') }}</h3>
           <ion-list>
             <ion-item 
-              v-for="(p, index) in persons" 
-              :key="index"
+              v-for="p in persons" 
+              :key="p.id"
               @click="selectPerson(p)"
               class="person-list-item"
             >
@@ -122,7 +122,7 @@ import {
   IonLabel,
   IonAvatar
 } from '@ionic/vue';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { 
@@ -131,47 +131,60 @@ import {
   settingsOutline, 
   settingsSharp 
 } from 'ionicons/icons';
+import { injectDbService, Person } from '../services/dbService';
+import { defaultPerson } from '../config/defaultPerson';
 
 // 国际化
 const { t } = useI18n();
 
-// 定义人员数据结构
-interface Person {
-  name: string;
-  location: string;
-  weight: number | null;
-  height: number | null;
-  age: number | null;
-}
-
 // 定义组件属性
 const props = defineProps<{
   title: string;
-  person: Person;
+  person: Omit<Person, 'id'>;
 }>();
 
 // 定义组件事件
 const emit = defineEmits<{
-  update: [value: Person];
+  update: [value: Omit<Person, 'id'>];
 }>();
 
 // 路由
 const router = useRouter();
 
 // 人员列表管理
-const persons = ref<Person[]>([
-  { name: '张三', location: '39.9042, 116.4074', weight: 70, height: 175, age: 30 },
-  { name: '李四', location: '31.2304, 121.4737', weight: 65, height: 170, age: 25 },
-  { name: '王五', location: '23.1291, 113.2644', weight: 75, height: 180, age: 35 }
-]);
+const persons = ref<Person[]>([]);
 
 // 模态框状态
 const isPersonSelectModalOpen = ref(false);
+
+// 取消订阅函数
+let unsubscribeFromPersons: (() => void) | null = null;
 
 // 判断是否已选择人员
 const isPersonSelected = computed(() => {
   return !!props.person.name || !!props.person.location || props.person.weight || props.person.height || props.person.age;
 });
+
+// 获取数据库服务实例
+const dbService = injectDbService();
+
+// 初始化数据
+const initData = async () => {
+  try {
+    // 加载初始数据
+    const dbPersons = await dbService.getAllPersons();
+    // 添加默认人员
+    persons.value = [defaultPerson, ...dbPersons.filter(person => person.id !== defaultPerson.id)];
+    
+    // 监听数据变化
+    unsubscribeFromPersons = await dbService.watchPersons((newPersons) => {
+      // 当数据变化时，重新添加默认人员
+      persons.value = [defaultPerson, ...newPersons.filter(person => person.id !== defaultPerson.id)];
+    });
+  } catch (error) {
+    console.error('Failed to load persons:', error);
+  }
+};
 
 // 跳转到人员管理页面
 const goToPersonManagement = () => {
@@ -190,9 +203,24 @@ const closePersonSelectModal = () => {
 
 // 选择人员
 const selectPerson = (p: Person) => {
-  emit('update', { ...p });
+  // 移除id属性，只传递需要的字段
+  const { id, ...personData } = p;
+  emit('update', personData);
   closePersonSelectModal();
 };
+
+// 组件挂载时初始化数据
+onMounted(() => {
+  initData();
+});
+
+// 组件卸载时清理
+onUnmounted(() => {
+  if (unsubscribeFromPersons) {
+    unsubscribeFromPersons();
+    unsubscribeFromPersons = null;
+  }
+});
 </script>
 
 <style scoped>

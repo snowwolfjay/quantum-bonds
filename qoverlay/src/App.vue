@@ -79,8 +79,9 @@ import {
   IonSelect,
   IonSelectOption
 } from "@ionic/vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import i18n, { loadLanguageFile } from './i18n';
+import { provideDbService } from './services/dbService';
 import {
   calculatorOutline,
   calculatorSharp,
@@ -103,6 +104,9 @@ import {
   personOutline,
   personSharp
 } from "ionicons/icons";
+
+// 提供数据库服务
+const dbService = provideDbService();
 
 const selectedIndex = ref(0);
 const appPages = [

@@ -110,7 +110,10 @@ import {
   IonIcon,
   IonModal,
   IonToolbar,
-  IonButtons
+  IonButtons,
+  IonHeader,
+  IonTitle,
+  IonContent
 } from '@ionic/vue';
 import { ref, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';

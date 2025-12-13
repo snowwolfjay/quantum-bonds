@@ -26,30 +26,30 @@
             </ion-button>
 
             <!-- 人员列表 -->
-            <ion-list>
-              <ion-item 
-                v-for="(person, index) in persons" 
-                :key="index"
-                class="person-list-item"
-              >
-                <ion-avatar slot="start">
-                  <img :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(person.name || '?')}&background=random&color=fff&size=64`" />
-                </ion-avatar>
-                <ion-label>
-                  <h2>{{ person.name || t('计算页面.人员.未命名') }}</h2>
-                  <p>{{ person.age ? `${person.age} ${t('计算页面.人员.岁')}` : t('计算页面.人员.年龄未知') }} | {{ person.height ? `${person.height} cm` : t('计算页面.人员.身高未知') }} | {{ person.weight ? `${person.weight} kg` : t('计算页面.人员.体重未知') }}</p>
-                  <p class="location-info">{{ person.location || t('计算页面.人员.位置未知') }}</p>
-                </ion-label>
-                <ion-buttons slot="end" class="action-buttons">
-                  <ion-button color="primary" @click="editPerson(person, index)">
-                    {{ t('人员管理页面.编辑') }}
-                  </ion-button>
-                  <ion-button color="danger" @click="deletePerson(index)">
-                    {{ t('人员管理页面.删除') }}
-                  </ion-button>
-                </ion-buttons>
-              </ion-item>
-            </ion-list>
+              <ion-list>
+                <ion-item 
+                  v-for="person in persons" 
+                  :key="person.id"
+                  class="person-list-item"
+                >
+                  <ion-avatar slot="start">
+                    <img :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(person.name || '?')}&background=random&color=fff&size=64`" />
+                  </ion-avatar>
+                  <ion-label>
+                    <h2>{{ person.name || t('计算页面.人员.未命名') }}</h2>
+                    <p>{{ person.age ? `${person.age} ${t('计算页面.人员.岁')}` : t('计算页面.人员.年龄未知') }} | {{ person.height ? `${person.height} cm` : t('计算页面.人员.身高未知') }} | {{ person.weight ? `${person.weight} kg` : t('计算页面.人员.体重未知') }}</p>
+                    <p class="location-info">{{ person.location || t('计算页面.人员.位置未知') }}</p>
+                  </ion-label>
+                  <ion-buttons slot="end" class="action-buttons">
+                    <ion-button color="primary" @click="editPerson(person)">
+                      {{ t('人员管理页面.编辑') }}
+                    </ion-button>
+                    <ion-button color="danger" @click="deletePerson(person)">
+                      {{ t('人员管理页面.删除') }}
+                    </ion-button>
+                  </ion-buttons>
+                </ion-item>
+              </ion-list>
 
             <!-- 空状态提示 -->
             <div v-if="persons.length === 0" class="empty-state">
@@ -70,7 +70,7 @@
     <ion-modal :is-open="isModalOpen" @did-dismiss="closeModal">
       <ion-header>
         <ion-toolbar>
-          <ion-title>{{ editingPersonIndex >= 0 ? t('编辑模态框.标题', { title: editingPerson.name || t('计算页面.人员.未命名') }) : t('人员管理页面.添加人员') }}</ion-title>
+          <ion-title>{{ editingPersonId ? t('编辑模态框.标题', { title: editingPerson.name || t('计算页面.人员.未命名') }) : t('人员管理页面.添加人员') }}</ion-title>
           <ion-buttons slot="end">
             <ion-button @click="closeModal">{{ t('编辑模态框.取消') }}</ion-button>
           </ion-buttons>
@@ -166,7 +166,7 @@ import {
   IonIcon,
   IonFooter
 } from '@ionic/vue';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { 
   addCircleOutline, 
@@ -174,38 +174,52 @@ import {
   personOutline, 
   personSharp 
 } from 'ionicons/icons';
+import { injectDbService, Person } from '../services/dbService';
+import { defaultPerson } from '../config/defaultPerson';
 
 // 国际化
 const { t } = useI18n();
 
-// 定义人员数据结构
-interface Person {
-  name: string;
-  location: string;
-  weight: number | null;
-  height: number | null;
-  age: number | null;
-}
-
-// 人员列表（模拟数据，后续需要改为全局状态管理）
-const persons = ref<Person[]>([
-  { name: '张三', location: '39.9042, 116.4074', weight: 70, height: 175, age: 30 },
-  { name: '李四', location: '31.2304, 121.4737', weight: 65, height: 170, age: 25 },
-  { name: '王五', location: '23.1291, 113.2644', weight: 75, height: 180, age: 35 }
-]);
+// 人员列表
+const persons = ref<Person[]>([]);
 
 // 模态框状态
 const isModalOpen = ref(false);
 
 // 编辑用的人员数据
-const editingPerson = reactive<Person>({
+const editingPerson = reactive<Omit<Person, 'id'>>({
   name: '',
   location: '',
   weight: null,
   height: null,
   age: null
 });
-const editingPersonIndex = ref(-1);
+
+// 编辑的人员ID
+const editingPersonId = ref<string | null>(null);
+
+// 取消订阅函数
+let unsubscribeFromPersons: (() => void) | null = null;
+
+// 获取数据库服务实例
+const dbService = injectDbService();
+
+// 初始化数据
+const initData = async () => {
+  try {
+    // 加载初始数据，并过滤掉默认人员
+    const dbPersons = await dbService.getAllPersons();
+    persons.value = dbPersons.filter(person => person.id !== defaultPerson.id);
+    
+    // 监听数据变化，并过滤掉默认人员
+    unsubscribeFromPersons = await dbService.watchPersons((newPersons) => {
+      persons.value = newPersons.filter(person => person.id !== defaultPerson.id);
+    });
+  } catch (error) {
+    console.error('Failed to initialize data:', error);
+    alert(t('错误.计算失败'));
+  }
+};
 
 // 打开添加新人员模态框
 const addNewPerson = () => {
@@ -216,14 +230,14 @@ const addNewPerson = () => {
     height: null,
     age: null
   });
-  editingPersonIndex.value = -1;
+  editingPersonId.value = null;
   isModalOpen.value = true;
 };
 
 // 打开编辑人员模态框
-const editPerson = (person: Person, index: number) => {
-  Object.assign(editingPerson, person);
-  editingPersonIndex.value = index;
+const editPerson = (person: Person) => {
+  Object.assign(editingPerson, { ...person });
+  editingPersonId.value = person.id;
   isModalOpen.value = true;
 };
 
@@ -233,23 +247,49 @@ const closeModal = () => {
 };
 
 // 保存人员信息
-const savePerson = () => {
-  if (editingPersonIndex.value >= 0) {
-    // 更新现有人员
-    persons.value[editingPersonIndex.value] = { ...editingPerson };
-  } else {
-    // 添加新人员
-    persons.value.push({ ...editingPerson });
+const savePerson = async () => {
+  try {
+    if (editingPersonId.value) {
+      // 更新现有人员
+      await dbService.updatePerson({
+        id: editingPersonId.value,
+        ...editingPerson
+      });
+    } else {
+      // 添加新人员
+      await dbService.addPerson(editingPerson);
+    }
+    closeModal();
+  } catch (error) {
+    console.error('Failed to save person:', error);
+    alert(t('错误.计算失败'));
   }
-  closeModal();
 };
 
 // 删除人员
-const deletePerson = (index: number) => {
+const deletePerson = async (person: Person) => {
   if (confirm(t('人员管理页面.确认删除'))) {
-    persons.value.splice(index, 1);
+    try {
+      await dbService.deletePerson(person.id);
+    } catch (error) {
+      console.error('Failed to delete person:', error);
+      alert(t('错误.计算失败'));
+    }
   }
 };
+
+// 组件挂载时初始化数据
+onMounted(() => {
+  initData();
+});
+
+// 组件卸载时清理
+onUnmounted(() => {
+  if (unsubscribeFromPersons) {
+    unsubscribeFromPersons();
+    unsubscribeFromPersons = null;
+  }
+});
 </script>
 
 <style scoped>
