@@ -56,11 +56,45 @@
       </ion-card>
 
       <!-- 分享按钮 -->
-      <ion-button expand="block" color="secondary" @click="share">
+      <ion-button expand="block" color="secondary" @click="openShareModal">
         <ion-icon slot="start" :ios="shareOutline" :md="shareSharp"></ion-icon>
         {{ t('计算页面.快速.分享') }}
       </ion-button>
     </div>
+
+    <!-- 分享模态窗口 -->
+    <ion-modal :is-open="isShareModalOpen" @did-dismiss="closeShareModal">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ t('计算页面.快速.分享') }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button @click="closeShareModal">{{ t('编辑模态框.取消') }}</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <!-- Canvas 容器 -->
+        <div class="share-canvas-container">
+          <canvas 
+            ref="shareCanvas" 
+            width="600" 
+            height="300" 
+            class="share-canvas"
+          ></canvas>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="share-actions">
+          <ion-button expand="block" color="primary" @click="shareFromCanvas">
+            <ion-icon slot="start" :ios="shareOutline" :md="shareSharp"></ion-icon>
+            {{ t('计算页面.快速.分享') }}
+          </ion-button>
+          <ion-button expand="block" @click="closeShareModal">
+            {{ t('编辑模态框.取消') }}
+          </ion-button>
+        </div>
+      </ion-content>
+    </ion-modal>
   </div>
 </template>
 
@@ -73,12 +107,16 @@ import {
   IonItemDivider,
   IonLabel,
   IonButton,
-  IonIcon
+  IonIcon,
+  IonModal,
+  IonToolbar,
+  IonButtons
 } from '@ionic/vue';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { shareOutline, shareSharp } from 'ionicons/icons';
 import { calculateQuickQuantumOverlap } from '../utils/quickCalc';
+import { drawShareContent, canvasToBase64, shareImage } from '../utils/shareUtils';
 import PersonInputComponent from './PersonInputComponent.vue';
 
 // 国际化
@@ -123,6 +161,15 @@ const showResult = ref(false);
 const result = ref<CalculationResult>({
   overlapAmount: 0
 });
+
+// 分享模态窗口状态
+const isShareModalOpen = ref(false);
+
+// Canvas引用
+const shareCanvas = ref<HTMLCanvasElement | null>(null);
+
+// 重叠百分比（快速计算中默认为0，实际应用中可能需要计算）
+const overlapPercentage = ref(0);
 
 // 表单验证
 const isFormValid = computed(() => {
@@ -186,22 +233,56 @@ const calculate = () => {
   }
 };
 
-// 分享功能
-const share = () => {
-  // 简单的分享实现
-  const shareText = `${t('计算页面.快速.重叠描述')}: ${result.value.overlapAmount.toExponential(2)}`;
+// 打开分享模态窗口
+const openShareModal = () => {
+  isShareModalOpen.value = true;
+  // 延迟绘制，确保Canvas已经渲染
+  setTimeout(() => {
+    renderShareCanvas();
+  }, 100);
+};
+
+// 关闭分享模态窗口
+const closeShareModal = () => {
+  isShareModalOpen.value = false;
+};
+
+// 绘制分享内容到Canvas
+const renderShareCanvas = () => {
+  if (!shareCanvas.value) return;
   
-  if (navigator.share) {
-    navigator.share({
-      title: t('分享.标题'),
-      text: shareText,
-      url: window.location.href
-    });
-  } else {
-    // 回退方案：复制到剪贴板
-    navigator.clipboard.writeText(shareText);
-    alert(t('分享.已复制'));
-  }
+  // 使用默认名称或实际名称
+  const personAName = personA.value.name || t('计算页面.人员.A');
+  const personBName = personB.value.name || t('计算页面.人员.B');
+  
+  // 绘制Canvas内容
+  drawShareContent(shareCanvas.value, personAName, personBName, result.value.overlapAmount, overlapPercentage.value);
+};
+
+// 从Canvas分享
+const shareFromCanvas = () => {
+  if (!shareCanvas.value) return;
+  
+  // 将Canvas转换为base64
+  const imageUrl = canvasToBase64(shareCanvas.value);
+  
+  // 调用系统分享
+  shareImage(
+    t('分享.标题'),
+    t('计算页面.快速.重叠描述'),
+    imageUrl,
+    () => {
+      // 分享成功
+      alert(t('分享.已复制'));
+      closeShareModal();
+    },
+    (error) => {
+      // 分享失败
+      console.error('分享失败:', error);
+      alert(t('分享.已复制'));
+      closeShareModal();
+    }
+  );
 };
 </script>
 
@@ -304,5 +385,42 @@ const share = () => {
 
 ion-button {
   margin-top: 0;
+}
+
+/* 分享模态窗口样式 */
+.share-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.share-canvas {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  max-width: 100%;
+  height: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.share-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Dark mode specific styles */
+@media (prefers-color-scheme: dark) {
+  .share-canvas-container {
+    background-color: #1e1e1e;
+  }
+  
+  .share-canvas {
+    border-color: #444444;
+  }
 }
 </style>

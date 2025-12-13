@@ -133,10 +133,44 @@
         </ion-list>
 
         <!-- 分享按钮 -->
-        <ion-button expand="block" color="secondary" @click="share">
-          <ion-icon slot="start" :ios="shareOutline" :md="shareSharp"></ion-icon>
-          {{ t('计算页面.精确.分享定制结果') }}
-        </ion-button>
+    <ion-button expand="block" color="secondary" @click="openShareModal">
+      <ion-icon slot="start" :ios="shareOutline" :md="shareSharp"></ion-icon>
+      {{ t('计算页面.精确.分享定制结果') }}
+    </ion-button>
+
+    <!-- 分享模态窗口 -->
+    <ion-modal :is-open="isShareModalOpen" @did-dismiss="closeShareModal">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ t('计算页面.精确.分享定制结果') }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button @click="closeShareModal">{{ t('编辑模态框.取消') }}</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <!-- Canvas 容器 -->
+        <div class="share-canvas-container">
+          <canvas 
+            ref="shareCanvas" 
+            width="600" 
+            height="300" 
+            class="share-canvas"
+          ></canvas>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="share-actions">
+          <ion-button expand="block" color="primary" @click="shareFromCanvas">
+            <ion-icon slot="start" :ios="shareOutline" :md="shareSharp"></ion-icon>
+            {{ t('计算页面.精确.分享定制结果') }}
+          </ion-button>
+          <ion-button expand="block" @click="closeShareModal">
+            {{ t('编辑模态框.取消') }}
+          </ion-button>
+        </div>
+      </ion-content>
+    </ion-modal>
       </ion-card-content>
     </ion-card>
   </div>
@@ -151,19 +185,21 @@ import {
   IonCardContent,
   IonItemDivider,
   IonLabel,
-  IonList,
-  IonItem,
   IonButton,
   IonIcon,
-  IonNote,
-  IonCheckbox,
+  IonList,
+  IonItem,
   IonSelect,
-  IonSelectOption
+  IonSelectOption,
+  IonModal,
+  IonToolbar,
+  IonButtons
 } from '@ionic/vue';
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { shareOutline, shareSharp } from 'ionicons/icons';
-import { calculatePreciseQuantumOverlap, parseLocation } from '../utils/preciseCalc';
+import { calculatePreciseQuantumOverlap } from '../utils/preciseCalc';
+import { drawShareContent, canvasToBase64, shareImage } from '../utils/shareUtils';
 import PersonInputComponent from './PersonInputComponent.vue';
 
 // 国际化
@@ -253,6 +289,12 @@ const shareSettings = ref<ShareSettings>({
   colorScheme: 'default'
 });
 
+// 分享模态窗口状态
+const isShareModalOpen = ref(false);
+
+// Canvas引用
+const shareCanvas = ref<HTMLCanvasElement | null>(null);
+
 // 表单验证
 const isFormValid = computed(() => {
   return (
@@ -274,6 +316,12 @@ function getTransmissionMethodName(method: string): string {
 // 获取量子类型名称
 function getQuantumTypeName(type: string): string {
   return t(`量子类型.${type}`) as string;
+}
+
+// 解析位置坐标字符串为经纬度
+function parseLocation(locationStr: string) {
+  const [lat, lon] = locationStr.split(',').map(coord => parseFloat(coord.trim()));
+  return { lat, lon };
 }
 
 // 计算量子重叠
@@ -309,47 +357,56 @@ const calculate = () => {
   }
 };
 
-// 分享功能
-const share = () => {
-  // 构建分享文本
-  let shareText = `${t('分享.标题')}\n\n`;
+// 打开分享模态窗口
+const openShareModal = () => {
+  isShareModalOpen.value = true;
+  // 延迟绘制，确保Canvas已经渲染
+  setTimeout(() => {
+    renderShareCanvas();
+  }, 100);
+};
+
+// 关闭分享模态窗口
+const closeShareModal = () => {
+  isShareModalOpen.value = false;
+};
+
+// 绘制分享内容到Canvas
+const renderShareCanvas = () => {
+  if (!shareCanvas.value) return;
   
-  if (shareSettings.value.showOverlapAmount) {
-    shareText += `${t('计算页面.精确.重叠数量')}: ${result.value.overlapAmount.toExponential(2)}\n`;
-  }
+  // 使用默认名称或实际名称
+  const personAName = personA.value.name || t('计算页面.人员.A');
+  const personBName = personB.value.name || t('计算页面.人员.B');
   
-  if (shareSettings.value.showOverlapPercentage) {
-    shareText += `${t('计算页面.精确.重叠百分比')}: ${(result.value.overlapPercentage * 100).toFixed(4)}%\n`;
-  }
+  // 绘制Canvas内容
+  drawShareContent(shareCanvas.value, personAName, personBName, result.value.overlapAmount, result.value.overlapPercentage);
+};
+
+// 从Canvas分享
+const shareFromCanvas = () => {
+  if (!shareCanvas.value) return;
   
-  if (shareSettings.value.showTransmissionRates) {
-    shareText += `\n${t('计算页面.精确.传播方式抵达率')}:\n`;
-    for (const [method, rate] of Object.entries(result.value.transmissionRates)) {
-      shareText += `${getTransmissionMethodName(method)}: ${(rate * 100).toFixed(4)}%\n`;
+  // 将Canvas转换为base64
+  const imageUrl = canvasToBase64(shareCanvas.value);
+  
+  // 调用系统分享
+  shareImage(
+    t('分享.标题'),
+    t('计算页面.精确.重叠描述'),
+    imageUrl,
+    () => {
+      // 分享成功
+      alert(t('分享.已复制定制'));
+      closeShareModal();
+    },
+    (error) => {
+      // 分享失败
+      console.error('分享失败:', error);
+      alert(t('分享.已复制定制'));
+      closeShareModal();
     }
-  }
-  
-  if (shareSettings.value.showQuantumTypeRates) {
-    shareText += `\n${t('计算页面.精确.量子类型抵达率')}:\n`;
-    for (const [type, rate] of Object.entries(result.value.quantumTypeRates)) {
-      shareText += `${getQuantumTypeName(type)}: ${(rate * 100).toFixed(4)}%\n`;
-    }
-  }
-  
-  // 添加配色方案信息
-  shareText += `\n${t('计算页面.精确.选择配色方案')}: ${t(`颜色方案.${shareSettings.value.colorScheme}`)}`;
-  
-  if (navigator.share) {
-    navigator.share({
-      title: t('分享.标题'),
-      text: shareText,
-      url: window.location.href
-    });
-  } else {
-    // 回退方案：复制到剪贴板
-    navigator.clipboard.writeText(shareText);
-    alert(t('分享.已复制定制'));
-  }
+  );
 };
 </script>
 
@@ -466,4 +523,40 @@ const share = () => {
   margin-top: 0;
 }
 
+/* 分享模态窗口样式 */
+.share-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.share-canvas {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  max-width: 100%;
+  height: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.share-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Dark mode specific styles */
+@media (prefers-color-scheme: dark) {
+  .share-canvas-container {
+    background-color: #1e1e1e;
+  }
+  
+  .share-canvas {
+    border-color: #444444;
+  }
+}
 </style>
