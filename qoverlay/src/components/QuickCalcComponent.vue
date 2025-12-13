@@ -41,13 +41,10 @@
 
     <!-- 结果展示部分 -->
     <div v-if="showResult" class="result-section">
-      <ion-item-divider>
-        <ion-label>{{ t('计算页面.快速.结果') }}</ion-label>
-      </ion-item-divider>
       
       <ion-card class="result-card">
         <ion-card-header>
-          <ion-card-title>{{ t('计算页面.快速.重叠数量') }}</ion-card-title>
+          <ion-card-title>{{ t('计算页面.快速.结果') }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
           <div class="result-value">{{ result.overlapAmount.toExponential(2) }}</div>
