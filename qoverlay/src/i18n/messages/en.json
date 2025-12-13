@@ -1,0 +1,91 @@
+{
+  "导航菜单": {
+    "标题": "Quantum Bond",
+    "副标题": "Quantum Bond Calculator",
+    "语言": "Language",
+    "页面": {
+      "计算器": "Quantum Overlap Calculation",
+      "关于我们": "About Us",
+      "隐私政策": "Privacy Policy",
+      "条款与条件": "Terms & Conditions",
+      "参考文献": "References",
+      "名词解释": "Glossary",
+      "反馈": "Feedback",
+      "赞助": "Sponsor"
+    }
+  },
+  "计算页面": {
+    "快速": {
+      "标题": "Basic",
+      "副标题": "Enter parameters to calculate the quantum overlap between two people",
+      "计算": "Calculate Quantum Overlap",
+      "结果": "Calculation Result",
+      "重叠数量": "Total Quantum Overlap",
+      "重叠描述": "Total quantum overlap between Person A and Person B",
+      "分享": "Share Result"
+    },
+    "精确": {
+      "标题": "Advanced",
+      "副标题": "Enter detailed parameters to get precise quantum overlap results",
+      "计算": "Start Precise Calculation",
+      "结果": "Precise Calculation Result",
+      "重叠数量": "Total Quantum Overlap",
+      "重叠百分比": "Quantum Overlap Percentage",
+      "重叠百分比描述": "Percentage of quantum from Person B in Person A",
+      "传播方式抵达率": "Transmission Method Arrival Rates",
+      "量子类型抵达率": "Quantum Type Arrival Rates",
+      "分享设置": "Share Settings",
+      "选择结果展示": "Select Result Display",
+      "选择配色方案": "Select Color Scheme",
+      "分享定制结果": "Share Custom Result"
+    },
+    "最小年龄": "Minimum Age of Intersection",
+    "最小年龄占位符": "e.g., 18",
+    "人员": {
+      "A": "Person A",
+      "B": "Person B",
+      "坐标": "Location",
+      "体重": "Weight",
+      "身高": "Height",
+      "未设置": "Not Set"
+    }
+  },
+  "编辑模态框": {
+    "标题": "{title} - Edit",
+    "位置": "Location Coordinates (Latitude, Longitude)",
+    "位置占位符": "e.g., 39.9042, 116.4074",
+    "体重": "Weight (kg)",
+    "体重占位符": "e.g., 70",
+    "身高": "Height (cm)",
+    "身高占位符": "e.g., 175",
+    "取消": "Cancel",
+    "确认": "Confirm"
+  },
+  "传输方式": {
+    "呼吸": "Respiration",
+    "蒸发": "Evaporation",
+    "热运动": "Thermal Motion",
+    "外力": "External Force",
+    "量子跃迁": "Quantum Transition"
+  },
+  "量子类型": {
+    "水分子": "Water Molecules",
+    "氧": "Oxygen",
+    "其它": "Other"
+  },
+  "颜色方案": {
+    "默认": "Default",
+    "蓝色": "Blue",
+    "绿色": "Green",
+    "紫色": "Purple",
+    "红色": "Red"
+  },
+  "错误": {
+    "计算失败": "Calculation failed. Please check your input parameters."
+  },
+  "分享": {
+    "标题": "Quantum Overlap Calculation Result",
+    "已复制": "Result copied to clipboard",
+    "已复制定制": "Custom result copied to clipboard"
+  }
+}
