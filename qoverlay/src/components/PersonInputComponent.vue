@@ -1,17 +1,47 @@
 <template>
   <div class="person-input-component">
+    <!-- 选择人员按钮 -->
+    <div class="person-select-container" v-if="!isPersonSelected">
+      <h3 class="person-title">{{ title }}</h3>
+      <ion-button expand="block" color="primary" @click="openPersonSelectModal">
+        <ion-icon slot="start" :ios="personOutline" :md="personSharp"></ion-icon>
+        {{ t('计算页面.人员.选择') }}
+      </ion-button>
+      <ion-button expand="block" color="secondary" @click="goToPersonManagement">
+        <ion-icon slot="start" :ios="settingsOutline" :md="settingsSharp"></ion-icon>
+        {{ t('计算页面.人员.管理') }}
+      </ion-button>
+    </div>
+
     <!-- 展示信息视图 -->
-    <div class="person-info-container">
+    <div class="person-info-container" v-else>
       <div class="person-header">
         <h3 class="person-title">{{ title }}</h3>
         <ion-buttons>
-          <ion-button fill="clear" color="primary" @click="openEditModal">
-            <ion-icon slot="icon-only" :ios="createOutline" :md="createSharp"></ion-icon>
+          <ion-button fill="clear" color="primary" @click="openPersonSelectModal">
+            <ion-icon slot="icon-only" :ios="personOutline" :md="personSharp"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="primary" @click="goToPersonManagement">
+            <ion-icon slot="icon-only" :ios="settingsOutline" :md="settingsSharp"></ion-icon>
           </ion-button>
         </ion-buttons>
       </div>
       <div class="person-content">
         <ion-grid>
+          <ion-row>
+            <ion-col size="4">
+              <div class="info-item">
+                <div class="info-label">{{ t('计算页面.人员.称呼') }}</div>
+                <div class="info-value">{{ person.name || t('计算页面.人员.未设置') }}</div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="info-item">
+                <div class="info-label">{{ t('计算页面.人员.年龄') }}</div>
+                <div class="info-value">{{ person.age ? `${person.age} ${t('计算页面.人员.岁')}` : t('计算页面.人员.未设置') }}</div>
+              </div>
+            </ion-col>
+          </ion-row>
           <ion-row>
             <ion-col size="4">
               <div class="info-item">
@@ -36,56 +66,40 @@
       </div>
     </div>
 
-    <!-- 编辑信息模态框 -->
-    <ion-modal :is-open="isModalOpen" @did-dismiss="closeEditModal">
+    <!-- 人员选择模态框 -->
+    <ion-modal :is-open="isPersonSelectModalOpen" @did-dismiss="closePersonSelectModal">
       <ion-header>
         <ion-toolbar>
-          <ion-title>{{ t('编辑模态框.标题', { title }) }}</ion-title>
+          <ion-title>{{ t('计算页面.人员.选择') }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button @click="closePersonSelectModal">{{ t('编辑模态框.取消') }}</ion-button>
+            <ion-button color="secondary" @click="goToPersonManagement">{{ t('计算页面.人员.管理') }}</ion-button>
+          </ion-buttons>
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <div class="modal-content">
-          <!-- 位置坐标输入 -->
-          <div class="input-group">
-            <div class="input-label">{{ t('编辑模态框.位置') }}</div>
-            <ion-input 
-              v-model="editPerson.location" 
-              :placeholder="t('编辑模态框.位置占位符')"
-              class="modal-input"
-            ></ion-input>
-          </div>
-          
-          <!-- 体重输入 -->
-          <div class="input-group">
-            <div class="input-label">{{ t('编辑模态框.体重') }}</div>
-            <ion-input 
-              v-model.number="editPerson.weight" 
-              type="number" 
-              :placeholder="t('编辑模态框.体重占位符')"
-              class="modal-input"
-            ></ion-input>
-          </div>
-          
-          <!-- 身高输入 -->
-          <div class="input-group">
-            <div class="input-label">{{ t('编辑模态框.身高') }}</div>
-            <ion-input 
-              v-model.number="editPerson.height" 
-              type="number" 
-              :placeholder="t('编辑模态框.身高占位符')"
-              class="modal-input"
-            ></ion-input>
-          </div>
+        <div class="person-select-modal">
+          <!-- 人员列表 -->
+          <h3 class="section-title">{{ t('计算页面.人员.现有人员') }}</h3>
+          <ion-list>
+            <ion-item 
+              v-for="(p, index) in persons" 
+              :key="index"
+              @click="selectPerson(p)"
+              class="person-list-item"
+            >
+              <ion-avatar slot="start">
+                <img :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(p.name || '?')}&background=random&color=fff&size=64`" />
+              </ion-avatar>
+              <ion-label>
+                <h2>{{ p.name || t('计算页面.人员.未命名') }}</h2>
+                <p>{{ p.age ? `${p.age} ${t('计算页面.人员.岁')}` : t('计算页面.人员.年龄未知') }} | {{ p.height ? `${p.height} cm` : t('计算页面.人员.身高未知') }} | {{ p.weight ? `${p.weight} kg` : t('计算页面.人员.体重未知') }}</p>
+                <p class="location-info">{{ p.location || t('计算页面.人员.位置未知') }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
         </div>
       </ion-content>
-      <ion-footer>
-        <ion-toolbar class="footer-toolbar">
-          <ion-buttons slot="end" class="footer-buttons">
-            <ion-button @click="closeEditModal" class="footer-button">{{ t('编辑模态框.取消') }}</ion-button>
-            <ion-button @click="confirmEdit" color="primary" class="footer-button">{{ t('编辑模态框.确认') }}</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-footer>
     </ion-modal>
   </div>
 </template>
@@ -100,24 +114,34 @@ import {
   IonTitle,
   IonButtons,
   IonContent,
-  IonInput,
   IonGrid,
   IonRow,
   IonCol,
-  IonFooter
+  IonList,
+  IonItem,
+  IonLabel,
+  IonAvatar
 } from '@ionic/vue';
-import { ref, reactive, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { createOutline, createSharp } from 'ionicons/icons';
+import { useRouter } from 'vue-router';
+import { 
+  personOutline, 
+  personSharp, 
+  settingsOutline, 
+  settingsSharp 
+} from 'ionicons/icons';
 
 // 国际化
 const { t } = useI18n();
 
 // 定义人员数据结构
 interface Person {
+  name: string;
   location: string;
   weight: number | null;
   height: number | null;
+  age: number | null;
 }
 
 // 定义组件属性
@@ -131,35 +155,43 @@ const emit = defineEmits<{
   update: [value: Person];
 }>();
 
+// 路由
+const router = useRouter();
+
+// 人员列表管理
+const persons = ref<Person[]>([
+  { name: '张三', location: '39.9042, 116.4074', weight: 70, height: 175, age: 30 },
+  { name: '李四', location: '31.2304, 121.4737', weight: 65, height: 170, age: 25 },
+  { name: '王五', location: '23.1291, 113.2644', weight: 75, height: 180, age: 35 }
+]);
+
 // 模态框状态
-const isModalOpen = ref(false);
+const isPersonSelectModalOpen = ref(false);
 
-// 编辑用的人员数据
-const editPerson = reactive<Person>({ ...props.person });
+// 判断是否已选择人员
+const isPersonSelected = computed(() => {
+  return !!props.person.name || !!props.person.location || props.person.weight || props.person.height || props.person.age;
+});
 
-// 监听 props.person 变化，更新编辑数据
-watch(() => props.person, (newPerson) => {
-  Object.assign(editPerson, newPerson);
-}, { deep: true });
-
-// 打开编辑模态框
-const openEditModal = () => {
-  // 复制当前数据到编辑对象
-  Object.assign(editPerson, props.person);
-  isModalOpen.value = true;
+// 跳转到人员管理页面
+const goToPersonManagement = () => {
+  router.push('/person-management');
 };
 
-// 关闭编辑模态框
-const closeEditModal = () => {
-  isModalOpen.value = false;
+// 打开人员选择模态框
+const openPersonSelectModal = () => {
+  isPersonSelectModalOpen.value = true;
 };
 
-// 确认编辑
-const confirmEdit = () => {
-  // 发送更新事件
-  emit('update', { ...editPerson });
-  // 关闭模态框
-  closeEditModal();
+// 关闭人员选择模态框
+const closePersonSelectModal = () => {
+  isPersonSelectModalOpen.value = false;
+};
+
+// 选择人员
+const selectPerson = (p: Person) => {
+  emit('update', { ...p });
+  closePersonSelectModal();
 };
 </script>
 
@@ -336,6 +368,94 @@ ion-button {
   .footer-toolbar {
     --background: var(--ion-footer-background, #1e1e1e);
     --border-color: var(--ion-border-color, #444444);
+  }
+}
+
+/* 人员选择容器样式 */
+.person-select-container {
+  background-color: var(--ion-card-background-color, #f5f5f5);
+  border: 1px solid var(--ion-border-color, #e0e0e0);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin-bottom: 12px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.person-select-container:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-color: var(--ion-color-primary);
+}
+
+/* 人员选择模态框样式 */
+.person-select-modal {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ion-color-primary);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* 人员列表项样式 */
+.person-list-item {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --min-height: 80px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.person-list-item:hover {
+  --background: rgba(var(--ion-color-primary-rgb), 0.05);
+}
+
+.person-list-item ion-label h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.person-list-item ion-label p {
+  font-size: 14px;
+  color: var(--ion-color-medium);
+  margin: 4px 0;
+}
+
+.location-info {
+  font-size: 12px !important;
+  color: var(--ion-color-medium) !important;
+  margin-top: 2px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 添加人员按钮样式 */
+.add-person-button {
+  margin-top: 20px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* 深色模式下的人员选择容器 */
+@media (prefers-color-scheme: dark) {
+  .person-select-container {
+    background-color: var(--ion-card-background-color, #1e1e1e);
+    border-color: var(--ion-border-color, #444444);
+  }
+  
+  .person-list-item:hover {
+    --background: rgba(var(--ion-color-primary-rgb), 0.1);
   }
 }
 </style>

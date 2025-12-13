@@ -5,6 +5,7 @@
     "语言": "Language",
     "页面": {
       "计算器": "Quantum Overlap Calculation",
+      "人员管理": "Person Management",
       "关于我们": "About Us",
       "隐私政策": "Privacy Policy",
       "条款与条件": "Terms & Conditions",
@@ -47,7 +48,20 @@
       "坐标": "Location",
       "体重": "Weight",
       "身高": "Height",
-      "未设置": "Not Set"
+      "未设置": "Not Set",
+      "称呼": "Name",
+      "年龄": "Age",
+      "岁": "years old",
+      "选择": "Select Person",
+      "现有人员": "Existing Persons",
+      "未命名": "Unnamed",
+      "年龄未知": "Age unknown",
+      "身高未知": "Height unknown",
+      "体重未知": "Weight unknown",
+      "位置未知": "Location unknown",
+      "编辑": "Edit",
+      "添加": "Add New Person",
+      "管理": "Manage"
     }
   },
   "编辑模态框": {
@@ -58,6 +72,10 @@
     "体重占位符": "e.g., 70",
     "身高": "Height (cm)",
     "身高占位符": "e.g., 175",
+    "称呼": "Name",
+    "称呼占位符": "e.g., John Doe",
+    "年龄": "Age (years)",
+    "年龄占位符": "e.g., 30",
     "取消": "Cancel",
     "确认": "Confirm"
   },
@@ -251,6 +269,19 @@
   "条款页面": {
     "标题": "Terms & Conditions",
     "更新日期": "Last Updated"
+  },
+  "人员管理页面": {
+    "标题": "Person Management",
+    "人员列表": "Person List",
+    "添加人员": "Add Person",
+    "编辑": "Edit",
+    "删除": "Delete",
+    "确认删除": "Are you sure you want to delete this person?",
+    "空状态": {
+      "标题": "No Persons",
+      "描述": "You haven't added any persons yet. Click the button below to add your first person."
+    },
+    "添加第一个人员": "Add First Person"
   },
   "条款": {
     "引言": {

@@ -99,7 +99,9 @@ import {
   helpCircleOutline,
   helpCircleSharp,
   languageOutline,
-  languageSharp
+  languageSharp,
+  personOutline,
+  personSharp
 } from "ionicons/icons";
 
 const selectedIndex = ref(0);
@@ -109,6 +111,12 @@ const appPages = [
     url: "/main",
     iosIcon: calculatorOutline,
     mdIcon: calculatorSharp,
+  },
+  {
+    key: "人员管理",
+    url: "/person-management",
+    iosIcon: personOutline,
+    mdIcon: personSharp,
   },
   {
     key: "关于我们",

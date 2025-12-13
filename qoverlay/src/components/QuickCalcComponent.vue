@@ -86,9 +86,11 @@ const { t } = useI18n();
 
 // 定义人员数据结构
 interface Person {
+  name: string;
   location: string;
   weight: number | null;
   height: number | null;
+  age: number | null;
 }
 
 // 定义结果数据结构
@@ -98,15 +100,19 @@ interface CalculationResult {
 
 // 初始化人员数据
 const personA = ref<Person>({
+  name: '',
   location: '',
   weight: null,
-  height: null
+  height: null,
+  age: null
 });
 
 const personB = ref<Person>({
+  name: '',
   location: '',
   weight: null,
-  height: null
+  height: null,
+  age: null
 });
 
 // 最小年龄输入

@@ -37,6 +37,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/glossary',
     component: () => import ('../views/GlossaryPage.vue')
+  },
+  {
+    path: '/person-management',
+    component: () => import ('../views/PersonManagementPage.vue')
   }
 ]
 
