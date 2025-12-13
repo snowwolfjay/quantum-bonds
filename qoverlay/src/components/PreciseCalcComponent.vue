@@ -18,17 +18,19 @@
         @update="updatePersonB" 
       />
 
-      <!-- 最小年龄输入 -->
+      <!-- 自动计算的最小年龄显示 -->
       <div class="minimum-age-section">
         <div class="input-container">
           <label class="input-label">{{ t('计算页面.最小年龄') }}</label>
-          <input 
-            type="number" 
-            v-model.number="minimumAge" 
-            :placeholder="t('计算页面.最小年龄占位符')" 
-            class="custom-input"
-          />
+          <div class="auto-calculated-age" :class="{ 'age-not-calculated': !minimumAge }">
+            {{ minimumAge ? `${minimumAge} ${t('计算页面.人员.岁')}` : t('计算页面.错误.年龄未计算') }}
+          </div>
         </div>
+      </div>
+
+      <!-- 错误信息显示 -->
+      <div v-if="errorMessage" class="error-message">
+        {{ errorMessage }}
       </div>
 
       <!-- 计算按钮 -->
@@ -255,16 +257,37 @@ const personB = ref<Person>({
 
 // 更新人体 A 数据
 const updatePersonA = (newPerson: Person) => {
+  // 检查是否与人员B相同
+  if (newPerson.name && personB.value.name === newPerson.name) {
+    errorMessage.value = t('计算页面.错误.人员重复');
+    return;
+  }
   personA.value = { ...newPerson };
+  errorMessage.value = '';
 };
 
 // 更新人体 B 数据
 const updatePersonB = (newPerson: Person) => {
+  // 检查是否与人员A相同
+  if (newPerson.name && personA.value.name === newPerson.name) {
+    errorMessage.value = t('计算页面.错误.人员重复');
+    return;
+  }
   personB.value = { ...newPerson };
+  errorMessage.value = '';
 };
 
-// 最小年龄输入
-const minimumAge = ref<number | null>(null);
+// 自动计算的最小年龄
+const minimumAge = computed(() => {
+  // 只有当两个人都有年龄信息时，才计算最小值
+  if (personA.value.age !== null && personB.value.age !== null) {
+    return Math.min(personA.value.age, personB.value.age);
+  }
+  return null;
+});
+
+// 错误提示信息
+const errorMessage = ref('');
 
 // 初始化结果数据
 const showResult = ref(false);

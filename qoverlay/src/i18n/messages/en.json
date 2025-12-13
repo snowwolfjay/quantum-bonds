@@ -42,6 +42,10 @@
     },
     "最小年龄": "Minimum Age of Intersection",
     "最小年龄占位符": "e.g., 18",
+    "错误": {
+      "人员重复": "Person A and Person B cannot be the same person",
+      "年龄未计算": "Please select two persons, the system will automatically calculate the minimum age"
+    },
     "人员": {
       "A": "Person A",
       "B": "Person B",
