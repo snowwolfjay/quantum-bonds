@@ -1,8 +1,8 @@
 // 数据库服务 - 使用Vue的provide/inject机制
-import { createRxDatabase, addRxPlugin } from 'rxdb';
+import { createRxDatabase, addRxPlugin, RxDatabase } from 'rxdb';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
-import { provide, inject, InjectionKey } from 'vue';
+import { provide, inject, InjectionKey, onUnmounted } from 'vue';
 
 // 添加必要的插件
 addRxPlugin(RxDBMigrationSchemaPlugin);
@@ -48,12 +48,12 @@ export interface Person {
 
 // 数据库服务类
 export class DbService {
-  private db: any = null;
+  private db: RxDatabase | null = null;
   private isInitialized: boolean = false;
   private initializationPromise: Promise<void> | null = null;
 
   // 公共构造函数
-  constructor() {}
+  constructor() { }
 
 
   // 初始化数据库
@@ -150,6 +150,11 @@ export class DbService {
       subscription.unsubscribe();
     };
   }
+
+  destroyDbService() {
+    this.db?.close();
+    console.log('Database closed successfully');
+  }
 }
 
 // 创建注入键
@@ -159,6 +164,9 @@ export const DB_SERVICE_KEY: InjectionKey<DbService> = Symbol('dbService');
 export function provideDbService() {
   const dbService = new DbService();
   provide(DB_SERVICE_KEY, dbService);
+  onUnmounted(() => {
+    dbService.destroyDbService();
+  });
   return dbService;
 }
 
@@ -170,3 +178,4 @@ export function injectDbService(): DbService {
   }
   return dbService;
 }
+

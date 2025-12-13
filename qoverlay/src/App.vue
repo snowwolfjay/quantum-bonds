@@ -1,11 +1,15 @@
 <template>
   <ion-app>
     <!-- 加载状态 -->
-    <ion-loading :is-open="isLoading" message="{{ t('初始化.加载中') }}" :spinner="spinnerType"></ion-loading>
+    <ion-loading
+      :is-open="isLoading"
+      :message="t('初始化.加载中')"
+      :spinner="spinnerType"
+    ></ion-loading>
 
     <!-- 初始化模态框 -->
-    <InitModalComponent 
-      :is-open="showInitModal" 
+    <InitModalComponent
+      :is-open="showInitModal"
       @close="handleInitModalClose"
       @confirm="handleInitModalConfirm"
     />
@@ -14,8 +18,8 @@
       <ion-menu content-id="main-content" type="overlay">
         <ion-content>
           <ion-list id="main-menu">
-            <ion-list-header>{{ $t('导航菜单.标题') }}</ion-list-header>
-            <ion-note>{{ $t('导航菜单.副标题') }}</ion-note>
+            <ion-list-header>{{ $t("导航菜单.标题") }}</ion-list-header>
+            <ion-note>{{ $t("导航菜单.副标题") }}</ion-note>
 
             <ion-menu-toggle
               :auto-hide="false"
@@ -23,7 +27,6 @@
               :key="i"
             >
               <ion-item
-                @click="selectedIndex = i"
                 router-direction="root"
                 :router-link="p.url"
                 lines="none"
@@ -41,23 +44,27 @@
               </ion-item>
             </ion-menu-toggle>
           </ion-list>
-          
+
           <!-- 语言切换 -->
           <ion-list class="language-list">
             <ion-list-header>
-              <ion-icon slot="start" :ios="languageOutline" :md="languageSharp"></ion-icon>
-              {{ $t('导航菜单.语言') }}
+              <ion-icon
+                slot="start"
+                :ios="languageOutline"
+                :md="languageSharp"
+              ></ion-icon>
+              {{ $t("导航菜单.语言") }}
             </ion-list-header>
             <ion-item>
-              <ion-select 
-                :model-value="i18n.global.locale.value" 
+              <ion-select
+                :model-value="i18n.global.locale.value"
                 @ionChange="handleLanguageChange"
                 placeholder="选择语言"
                 interface="popover"
               >
-                <ion-select-option 
-                  v-for="lang in languages" 
-                  :key="lang.value" 
+                <ion-select-option
+                  v-for="lang in languages"
+                  :key="lang.value"
                   :value="lang.value"
                 >
                   {{ lang.label }}
@@ -89,13 +96,13 @@ import {
   IonSelect,
   IonSelectOption,
   IonLoading,
-  IonSpinner
+  IonSpinner,
 } from "@ionic/vue";
-import { ref, onMounted, provide } from "vue";
-import i18n, { loadLanguageFile } from './i18n';
-import { provideDbService, injectDbService } from './services/dbService';
-import { createInitService } from './services/initService';
-import InitModalComponent from './components/InitModalComponent.vue';
+import { ref, onMounted, provide, watch } from "vue";
+import i18n, { loadLanguageFile } from "./i18n";
+import { provideDbService, injectDbService } from "./services/dbService";
+import { createInitService } from "./services/initService";
+import InitModalComponent from "./components/InitModalComponent.vue";
 import {
   calculatorOutline,
   calculatorSharp,
@@ -116,19 +123,20 @@ import {
   languageOutline,
   languageSharp,
   personOutline,
-  personSharp
+  personSharp,
 } from "ionicons/icons";
+import router from "./router";
 
 // 提供数据库服务
 const dbService = provideDbService();
 
 // 初始化服务
 const initService = createInitService(dbService);
-
+const t = i18n.global.t;
 // 初始化状态
 const isLoading = ref(true);
 const showInitModal = ref(false);
-const spinnerType = ref('dots');
+const spinnerType = ref("dots");
 
 const selectedIndex = ref(0);
 const appPages = [
@@ -140,7 +148,7 @@ const appPages = [
   },
   {
     key: "人员管理",
-    url: "/person-management",
+    url: "/persons",
     iosIcon: personOutline,
     mdIcon: personSharp,
   },
@@ -195,8 +203,8 @@ if (path !== undefined) {
 
 // 语言切换
 const languages = [
-  { value: 'zh', label: '中文' },
-  { value: 'en', label: 'English' }
+  { value: "zh", label: "中文" },
+  { value: "en", label: "English" },
 ];
 
 // 切换语言处理函数
@@ -210,22 +218,22 @@ const initApp = async () => {
   try {
     // 显示加载状态
     isLoading.value = true;
-    
+
     // 检查是否为首次使用
     const isFirstUse = await initService.checkFirstUse();
-    
+
     // 初始化数据库
     await initService.initDatabase();
-    
+
     // 隐藏加载状态
     isLoading.value = false;
-    
+
     // 如果是首次使用，显示初始化模态框
     if (isFirstUse) {
       showInitModal.value = true;
     }
   } catch (error) {
-    console.error('Error initializing app:', error);
+    console.error("Error initializing app:", error);
     isLoading.value = false;
   }
 };
@@ -234,7 +242,7 @@ const initApp = async () => {
 const handleInitModalClose = () => {
   // 首次使用必须完成初始化，所以不能关闭模态框
   // 这里可以添加一些逻辑，比如退出应用或重新显示模态框
-  console.log('Init modal closed');
+  console.log("Init modal closed");
 };
 
 // 处理初始化模态框确认
@@ -247,7 +255,7 @@ const handleInitModalConfirm = async (userData: any) => {
     // 隐藏初始化模态框
     showInitModal.value = false;
   } catch (error) {
-    console.error('Error saving initial user:', error);
+    console.error("Error saving initial user:", error);
     // 可以显示错误信息
   }
 };
@@ -256,6 +264,14 @@ const handleInitModalConfirm = async (userData: any) => {
 onMounted(async () => {
   await initApp();
 });
+
+watch(
+  () => router.currentRoute.value.path,
+  (newPath) => {
+    selectedIndex.value =
+      appPages.findIndex((page) => page.url.startsWith(newPath)) || 0;
+  }
+);
 </script>
 
 <style scoped>

@@ -7,10 +7,6 @@
         <ion-icon slot="start" :ios="personOutline" :md="personSharp"></ion-icon>
         {{ t('计算页面.人员.选择') }}
       </ion-button>
-      <ion-button expand="block" color="secondary" @click="goToPersonManagement">
-        <ion-icon slot="start" :ios="settingsOutline" :md="settingsSharp"></ion-icon>
-        {{ t('计算页面.人员.管理') }}
-      </ion-button>
     </div>
 
     <!-- 展示信息视图 -->
@@ -188,7 +184,7 @@ const initData = async () => {
 
 // 跳转到人员管理页面
 const goToPersonManagement = () => {
-  router.push('/person-management');
+  router.replace('/persons');
 };
 
 // 打开人员选择模态框
@@ -220,6 +216,7 @@ onUnmounted(() => {
     unsubscribeFromPersons();
     unsubscribeFromPersons = null;
   }
+  isPersonSelectModalOpen.value = false;
 });
 </script>
 

@@ -1,52 +1,56 @@
-import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHistory } from "@ionic/vue-router";
+import { RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '',
-    redirect: '/main'
+    path: "",
+    redirect: "/main",
   },
   {
-    path: '/main',
-    component: () => import ('../views/MainCalcPage.vue')
+    path: "/main",
+    component: () => import("../views/MainCalcPage.vue"),
   },
   {
-    path: '/about',
-    component: () => import ('../views/AboutPage.vue')
+    path: "/about",
+    component: () => import("../views/AboutPage.vue"),
   },
   {
-    path: '/privacy-policy',
-    component: () => import ('../views/PrivacyPolicyPage.vue')
+    path: "/privacy-policy",
+    component: () => import("../views/PrivacyPolicyPage.vue"),
   },
   {
-    path: '/terms',
-    component: () => import ('../views/TermsPage.vue')
+    path: "/terms",
+    component: () => import("../views/TermsPage.vue"),
   },
   {
-    path: '/feedback',
-    component: () => import ('../views/FeedbackPage.vue')
+    path: "/feedback",
+    component: () => import("../views/FeedbackPage.vue"),
   },
   {
-    path: '/sponsor',
-    component: () => import ('../views/SponsorPage.vue')
+    path: "/sponsor",
+    component: () => import("../views/SponsorPage.vue"),
   },
   {
-    path: '/references',
-    component: () => import ('../views/ReferencesPage.vue')
+    path: "/references",
+    component: () => import("../views/ReferencesPage.vue"),
   },
   {
-    path: '/glossary',
-    component: () => import ('../views/GlossaryPage.vue')
+    path: "/glossary",
+    component: () => import("../views/GlossaryPage.vue"),
   },
   {
-    path: '/person-management',
-    component: () => import ('../views/PersonManagementPage.vue')
+    path: "/persons",
+    component: () => import("../views/PersonManagementPage.vue"),
+  },
+  {
+    path:"/:pathMatch(.*)*",
+    redirect:"/main"
   }
-]
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
