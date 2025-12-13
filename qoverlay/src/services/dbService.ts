@@ -118,7 +118,8 @@ export class DbService {
   // 添加人员
   public async addPerson(person: Omit<Person, 'id'>): Promise<Person> {
     const collection = await this.getPersonsCollection();
-    const id = `person_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // 使用时间戳作为主要标识符，简化ID结构
+    const id = `person_${Date.now()}`;
     const doc = await collection.insert({ id, ...person });
     return doc.toJSON();
   }

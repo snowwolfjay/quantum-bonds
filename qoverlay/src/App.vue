@@ -1,5 +1,15 @@
 <template>
   <ion-app>
+    <!-- 加载状态 -->
+    <ion-loading :is-open="isLoading" message="{{ t('初始化.加载中') }}" :spinner="spinnerType"></ion-loading>
+
+    <!-- 初始化模态框 -->
+    <InitModalComponent 
+      :is-open="showInitModal" 
+      @close="handleInitModalClose"
+      @confirm="handleInitModalConfirm"
+    />
+
     <ion-split-pane content-id="main-content">
       <ion-menu content-id="main-content" type="overlay">
         <ion-content>
@@ -77,11 +87,15 @@ import {
   IonRouterOutlet,
   IonSplitPane,
   IonSelect,
-  IonSelectOption
+  IonSelectOption,
+  IonLoading,
+  IonSpinner
 } from "@ionic/vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, provide } from "vue";
 import i18n, { loadLanguageFile } from './i18n';
-import { provideDbService } from './services/dbService';
+import { provideDbService, injectDbService } from './services/dbService';
+import { createInitService } from './services/initService';
+import InitModalComponent from './components/InitModalComponent.vue';
 import {
   calculatorOutline,
   calculatorSharp,
@@ -107,6 +121,14 @@ import {
 
 // 提供数据库服务
 const dbService = provideDbService();
+
+// 初始化服务
+const initService = createInitService(dbService);
+
+// 初始化状态
+const isLoading = ref(true);
+const showInitModal = ref(false);
+const spinnerType = ref('dots');
 
 const selectedIndex = ref(0);
 const appPages = [
@@ -182,6 +204,58 @@ const handleLanguageChange = (event: any) => {
   const lang = event.detail.value;
   loadLanguageFile(lang);
 };
+
+// 初始化工作流
+const initApp = async () => {
+  try {
+    // 显示加载状态
+    isLoading.value = true;
+    
+    // 检查是否为首次使用
+    const isFirstUse = await initService.checkFirstUse();
+    
+    // 初始化数据库
+    await initService.initDatabase();
+    
+    // 隐藏加载状态
+    isLoading.value = false;
+    
+    // 如果是首次使用，显示初始化模态框
+    if (isFirstUse) {
+      showInitModal.value = true;
+    }
+  } catch (error) {
+    console.error('Error initializing app:', error);
+    isLoading.value = false;
+  }
+};
+
+// 处理初始化模态框关闭
+const handleInitModalClose = () => {
+  // 首次使用必须完成初始化，所以不能关闭模态框
+  // 这里可以添加一些逻辑，比如退出应用或重新显示模态框
+  console.log('Init modal closed');
+};
+
+// 处理初始化模态框确认
+const handleInitModalConfirm = async (userData: any) => {
+  try {
+    // 保存初始用户信息
+    await initService.saveInitialUser(userData);
+    // 设置首次使用时间
+    initService.setFirstUseTime();
+    // 隐藏初始化模态框
+    showInitModal.value = false;
+  } catch (error) {
+    console.error('Error saving initial user:', error);
+    // 可以显示错误信息
+  }
+};
+
+// 组件挂载时执行初始化
+onMounted(async () => {
+  await initApp();
+});
 </script>
 
 <style scoped>

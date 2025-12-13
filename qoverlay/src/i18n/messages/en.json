@@ -352,5 +352,21 @@
       "内容": "If you have any questions about these Terms, please contact us through the following methods:",
       "邮箱": "Email"
     }
+  },
+  "初始化": {
+    "标题": "Welcome",
+    "欢迎": "Welcome to Quantum Bond",
+    "欢迎描述": "Please fill in your personal information to start using the quantum overlap calculation feature.",
+    "姓名占位符": "Please enter your name",
+    "身高占位符": "Please enter your height",
+    "体重占位符": "Please enter your weight",
+    "年龄占位符": "Please enter your age",
+    "姓名必填": "Name is required, please enter your name",
+    "身高必填": "Height is required, please enter a valid height",
+    "体重必填": "Weight is required, please enter a valid weight",
+    "年龄必填": "Age is required, please enter a valid age",
+    "位置格式错误": "Invalid location format, please enter valid coordinates (e.g., 39.9042, 116.4074)",
+    "确认": "Confirm",
+    "加载中": "Initializing application..."
   }
 }
