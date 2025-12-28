@@ -1,217 +1,125 @@
 <template>
-	<view class="about">
-		<view class="content">
-			<view class="qrcode">
-				<image src="https://img.cdn.aliyun.dcloud.net.cn/guide/uniapp/app_download.png" @longtap="save"></image>
-				<text class="tip">扫码体验uni-app</text>
-			</view>
-			<view class="desc">
-				<text class="code">uni-app</text>
-				是一个使用 <text class="code">Vue.js</text> 开发跨平台应用的前端框架。
-			</view>
-			<view class="source">
-				<view class="title">本示例源码获取方式：</view>
-				<view class="source-list">
-					<view class="source-cell">
-						<text space="nbsp">1. </text>
-						<text>下载 HBuilderX，新建 uni-app 项目时选择 <text class="code">Hello uni-app</text> 模板。</text>
-					</view>
-					<view class="source-cell">
-						<text space="nbsp">2. </text>
-						<u-link class="link" :href="'https://github.com/dcloudio/hello-uniapp'" :text="'https://github.com/dcloudio/hello-uniapp'"></u-link>
-					</view>
-				</view>
-			</view>
-			<!-- #ifdef APP-PLUS -->
-			<button type="primary" @click="share">分享</button>
-			<!-- #endif -->
-		</view>
-		<!-- #ifdef APP-PLUS -->
-		<view class="version">
-			当前版本：{{version}}
-		</view>
-		<!-- #endif -->
-	</view>
+  <view class="about-page">
+    <scroll-view scroll-y class="content-container">
+      <view class="card">
+        <view class="card-header">
+          <view class="card-title">{{ t('关于页面.项目介绍.标题') }}</view>
+        </view>
+        <view class="card-content">
+          <view class="paragraph">{{ t('关于页面.项目介绍.第一段') }}</view>
+          <view class="paragraph">{{ t('关于页面.项目介绍.第二段') }}</view>
+          <view class="paragraph">{{ t('关于页面.项目介绍.第三段') }}</view>
+          <view class="paragraph">{{ t('关于页面.项目介绍.第四段') }}</view>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="card-header">
+          <view class="card-title">{{ t('关于页面.联系作者.标题') }}</view>
+        </view>
+        <view class="card-content">
+          <view class="contact-item">
+            <text class="contact-icon">📧</text>
+            <view class="contact-info">
+              <view class="contact-label">{{ t('关于页面.联系作者.邮箱') }}</view>
+              <view class="contact-value">contact@quantum-overlay.example</view>
+            </view>
+          </view>
+          <view class="contact-item">
+            <text class="contact-icon">📦</text>
+            <view class="contact-info">
+              <view class="contact-label">GitHub</view>
+              <view class="contact-value">github.com/quantum-overlay</view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="card-header">
+          <view class="card-title">{{ t('关于页面.开源协议.标题') }}</view>
+        </view>
+        <view class="card-content">
+          <view class="paragraph">{{ t('关于页面.开源协议.第一段') }}</view>
+          <view class="paragraph">{{ t('关于页面.开源协议.第二段') }}</view>
+          <view class="paragraph">{{ t('关于页面.开源协议.第三段') }}</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
 </template>
 
-<script>
-	export default {
-		data() {
-			return {
-				providerList: [],
-				version: ''
-			}
-		},
-		onLoad() {
-			// #ifdef APP-PLUS
-			this.version = plus.runtime.version;
-			uni.getProvider({
-				service: 'share',
-				success: (result) => {
-					const data = [];
-					for (let i = 0; i < result.provider.length; i++) {
-						switch (result.provider[i]) {
-							case 'weixin':
-								data.push({
-									name: '分享到微信好友',
-									id: 'weixin'
-								});
-								data.push({
-									name: '分享到微信朋友圈',
-									id: 'weixin',
-									type: 'WXSceneTimeline'
-								});
-								break;
-							case 'qq':
-								data.push({
-									name: '分享到QQ',
-									id: 'qq'
-								});
-								break;
-							default:
-								break;
-						}
-					}
-					this.providerList = data;
-				},
-				fail: (error) => {
-					console.log('获取分享通道失败' + JSON.stringify(error));
-				}
-			});
-			// #endif
-		},
-		methods: {
-			// #ifdef APP-PLUS
-			save() {
-				uni.showActionSheet({
-					itemList: ['保存图片到相册'],
-					success: () => {
-						plus.gallery.save('https://img.cdn.aliyun.dcloud.net.cn/guide/uniapp/app_download.png', function() {
-							uni.showToast({
-								title: '保存成功',
-								icon: 'none'
-							});
-						}, function() {
-							uni.showToast({
-								title: '保存失败，请重试！',
-								icon: 'none'
-							});
-						});
-					}
-				});
-			},
-			share(e) {
-				if (this.providerList.length === 0) {
-					uni.showModal({
-						title: '当前环境无分享渠道!',
-						showCancel: false
-					});
-					return;
-				}
-				let itemList = this.providerList.map(function(value) {
-					return value.name;
-				})
-				uni.showActionSheet({
-					itemList: itemList,
-					success: (res) => {
-						let provider = this.providerList[res.tapIndex].id;
-						uni.share({
-							provider: provider,
-							scene: this.providerList[res.tapIndex].type && this.providerList[res.tapIndex].type === 'WXSceneTimeline' ?
-								'WXSceneTimeline' : "WXSceneSession",
-							type: (provider === "qq") ? 1 : 0,
-							title: '欢迎体验uni-app',
-							summary: 'uni-app 是一个使用 Vue.js 开发跨平台应用的前端框架',
-							imageUrl: 'https://web-assets.dcloud.net.cn/unidoc/zh/8.jpg',
-							href: "https://m3w.cn/uniapp",
-							success: (res) => {
-								console.log("success:" + JSON.stringify(res));
-							},
-							fail: (e) => {
-								uni.showModal({
-									content: e.errMsg,
-									showCancel: false
-								})
-							}
-						});
-					}
-				})
-			}
-			// #endif
-		}
-	}
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 </script>
 
-<style>
-	page,
-	view {
-		display: flex;
-	}
+<style scoped>
+.about-page {
+  min-height: 100vh;
+  background-color: #F8F8F8;
+}
 
-	page {
-		min-height: 100%;
-		background-color: #FFFFFF;
-	}
+.content-container {
+  height: 100vh;
+}
 
-	image {
-		width: 360rpx;
-		height: 360rpx;
-	}
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  margin: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
 
-	.about {
-		flex-direction: column;
-		flex: 1;
-	}
+.card-header {
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+}
 
-	.content {
-		flex: 1;
-		padding: 30rpx;
-		flex-direction: column;
-		justify-content: center;
-	}
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #007AFF;
+}
 
-	.qrcode {
-		display: flex;
-		align-items: center;
-		flex-direction: column;
-	}
+.card-content {
+  padding: 16px;
+}
 
-	.qrcode .tip {
-		margin-top: 20rpx;
-	}
+.paragraph {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 12px;
+}
 
-	.desc {
-		margin-top: 30rpx;
-		display: block;
-	}
+.contact-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  gap: 12px;
+}
 
-	.code {
-		color: #e96900;
-		background-color: #f8f8f8;
-	}
+.contact-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
 
-	button {
-		width: 100%;
-		margin-top: 40rpx;
-	}
+.contact-info {
+  flex: 1;
+}
 
-	.version {
-		height: 80rpx;
-		line-height: 80rpx;
-		justify-content: center;
-		color: #ccc;
-	}
+.contact-label {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 4px;
+}
 
-	.source {
-		margin-top: 30rpx;
-		flex-direction: column;
-	}
-
-	.source-list {
-		flex-direction: column;
-	}
-
-	.link {
-		color: #007AFF;
-	}
+.contact-value {
+  font-size: 16px;
+  color: #333;
+}
 </style>

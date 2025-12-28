@@ -1,0 +1,372 @@
+{
+  "导航菜单": {
+    "标题": "Quantum Bond",
+    "副标题": "Caculate Bonds of Us in Quantum Scope",
+    "语言": "Language",
+    "页面": {
+      "计算器": "Quantum Overlap Calculation",
+      "人员管理": "Person Management",
+      "关于我们": "About Us",
+      "隐私政策": "Privacy Policy",
+      "条款与条件": "Terms & Conditions",
+      "参考文献": "References",
+      "名词解释": "Glossary",
+      "反馈": "Feedback",
+      "赞助": "Sponsor"
+    }
+  },
+  "计算页面": {
+    "快速": {
+      "标题": "Basic",
+      "副标题": "Enter parameters to calculate the quantum overlap between two people",
+      "计算": "Calculate Quantum Overlap",
+      "结果": "Calculation Result",
+      "重叠数量": "Total Quantum Overlap",
+      "重叠描述": "Total quantum overlap between Person A and Person B",
+      "分享": "Share Result"
+    },
+    "精确": {
+      "标题": "Advanced",
+      "副标题": "Enter detailed parameters to get precise quantum overlap results",
+      "计算": "Start Precise Calculation",
+      "结果": "Precise Calculation Result",
+      "重叠数量": "Total Quantum Overlap",
+      "重叠百分比": "Quantum Overlap Percentage",
+      "重叠百分比描述": "Percentage of quantum from Person B in Person A",
+      "传播方式抵达率": "Transmission Method Arrival Rates",
+      "量子类型抵达率": "Quantum Type Arrival Rates",
+      "分享设置": "Share Settings",
+      "选择结果展示": "Select Result Display",
+      "选择配色方案": "Select Color Scheme",
+      "分享定制结果": "Share Custom Result"
+    },
+    "最小年龄": "Minimum Age of Intersection",
+    "最小年龄占位符": "e.g., 18",
+    "错误": {
+      "人员重复": "Person A and Person B cannot be same person",
+      "年龄未计算": "Please select two persons, system will automatically calculate minimum age"
+    },
+    "人员": {
+      "A": "Person A",
+      "B": "Person B",
+      "坐标": "Location",
+      "体重": "Weight",
+      "身高": "Height",
+      "未设置": "Not Set",
+      "称呼": "Name",
+      "年龄": "Age",
+      "岁": "years old",
+      "选择": "Select Person",
+      "现有人员": "Existing Persons",
+      "未命名": "Unnamed",
+      "年龄未知": "Age unknown",
+      "身高未知": "Height unknown",
+      "体重未知": "Weight unknown",
+      "位置未知": "Location unknown",
+      "编辑": "Edit",
+      "添加": "Add New Person",
+      "管理": "Manage"
+    }
+  },
+  "编辑模态框": {
+    "标题": "{title} - Edit",
+    "位置": "Location Coordinates (Latitude, Longitude)",
+    "位置占位符": "e.g., 39.9042, 116.4074",
+    "体重": "Weight (kg)",
+    "体重占位符": "e.g., 70",
+    "身高": "Height (cm)",
+    "身高占位符": "e.g., 175",
+    "称呼": "Name",
+    "称呼占位符": "e.g., John Doe",
+    "年龄": "Age (years)",
+    "年龄占位符": "e.g., 30",
+    "取消": "Cancel",
+    "确认": "Confirm"
+  },
+  "传输方式": {
+    "呼吸": "Respiration",
+    "蒸发": "Evaporation",
+    "热运动": "Thermal Motion",
+    "外力": "External Force",
+    "量子跃迁": "Quantum Transition"
+  },
+  "量子类型": {
+    "水分子": "Water Molecules",
+    "氧": "Oxygen",
+    "其它": "Other"
+  },
+  "颜色方案": {
+    "默认": "Default",
+    "蓝色": "Blue",
+    "绿色": "Green",
+    "紫色": "Purple",
+    "红色": "Red"
+  },
+  "错误": {
+    "计算失败": "Calculation failed. Please check your input parameters."
+  },
+  "分享": {
+    "标题": "Quantum Overlap Calculation Result",
+    "已复制": "Result copied to clipboard",
+    "已复制定制": "Custom result copied to clipboard"
+  },
+  "反馈页面": {
+    "标题": "Feedback",
+    "发送反馈": "Send Feedback",
+    "请告诉我们": "Please tell us your thoughts and suggestions",
+    "姓名": "Name",
+    "邮箱": "Email",
+    "反馈类型": "Feedback Type",
+    "请选择反馈类型": "Please select feedback type",
+    "建议": "Suggestion",
+    "错误报告": "Bug Report",
+    "问题": "Question",
+    "其他": "Other",
+    "反馈内容": "Feedback Content",
+    "提交中": "Submitting...",
+    "提交反馈": "Submit Feedback",
+    "提交成功": "Feedback submitted successfully! Thank you for your support."
+  },
+  "关于页面": {
+    "标题": "About Us",
+    "项目介绍": {
+      "标题": "Project Introduction",
+      "第一段": "The Quantum Overlap Calculation Tool is an application for calculating quantum overlap between two people.",
+      "第二段": "Quantum overlap refers to the number of quantum from Person B present in Person A.",
+      "第三段": "Our core goal is to demonstrate the quantum overlap between humans and nature, recognize the integration of humans and nature, achieve harmonious coexistence between humans and nature, and ultimately eliminate extreme inequality, class, and achieve peace.",
+      "第四段": "The application provides two calculation modes: Quick Calculation Version and Precise Calculation Version (subscription)."
+    },
+    "联系作者": {
+      "标题": "Contact Author",
+      "邮箱": "Email"
+    },
+    "开源协议": {
+      "标题": "Open Source License",
+      "第一段": "This project adopts the MIT open source license.",
+      "第二段": "The MIT License is a permissive open source license that allows you to freely use, copy, modify, merge, publish, distribute, sublicense, and sell copies of the software.",
+      "第三段": "Simply include the copyright notice and license notice in the software and all copies of the software."
+    }
+  },
+  "名词解释页面": {
+    "标题": "Glossary"
+  },
+  "名词解释": {
+    "量子重叠": {
+      "术语": "Quantum Overlap",
+      "描述": "The number of quantum from Person B present in Person A."
+    },
+    "量子交换": {
+      "术语": "Quantum Exchange",
+      "描述": "The process of quantum transmission between humans through various means."
+    },
+    "直接量子交换量": {
+      "术语": "Direct Quantum Exchange Amount",
+      "描述": "The number of quantum from Person A that directly flows into Person B, based on thermal motion and speed."
+    },
+    "间接量子交换量": {
+      "术语": "Indirect Quantum Exchange Amount",
+      "描述": "The number of quantum from Person A that flows into Person B through other intermediates, based on air currents and other moving objects."
+    },
+    "跃迁量子交换量": {
+      "术语": "Quantum Transition Exchange Amount",
+      "描述": "The number of quantum from Person A that flows into Person B through quantum transition, which is the transmission amount of sub-light speed quantum."
+    },
+    "量子扩散抵达率": {
+      "术语": "Quantum Diffusion Arrival Rate",
+      "描述": "A distance-related parameter or function that refers to the probability/proportion of quantum from A that diffuses into the environment and reaches B's body."
+    }
+  },
+  "隐私政策页面": {
+    "标题": "Privacy Policy",
+    "更新日期": "Last Updated"
+  },
+  "隐私政策": {
+    "引言": {
+      "标题": "1. Introduction",
+      "内容": "Welcome to the Quantum Overlap Calculation Tool. This privacy policy explains how we collect, use, store, and protect your personal information."
+    },
+    "收集信息": {
+      "标题": "2. Information We Collect",
+      "内容": "When you use our application, we may collect the following information:",
+      "项目": {
+        "个人数据": "Personal data you provide, such as name and email address (only when voluntarily provided)",
+        "计算参数": "Calculation parameters you input, such as location coordinates, weight, height, date of birth, etc.",
+        "设备信息": "Device information, such as device model, operating system version, etc.",
+        "使用数据": "Usage data, such as application usage frequency, visited pages, etc."
+      }
+    },
+    "使用信息": {
+      "标题": "3. How We Use Your Information",
+      "内容": "The information we collect is mainly used for:",
+      "项目": {
+        "提供服务": "Providing, maintaining, and improving our services",
+        "处理请求": "Processing your requests and feedback",
+        "生成结果": "Generating calculation results",
+        "优化体验": "Analyzing application usage to optimize user experience"
+      }
+    },
+    "信息共享": {
+      "标题": "4. Information Sharing and Disclosure",
+      "内容": "We will not sell or rent your personal information to third parties. We may share your information in the following cases:",
+      "项目": {
+        "明确同意": "With your explicit consent",
+        "法律法规": "Complying with legal and regulatory requirements",
+        "保护权益": "Protecting our rights, property, or safety",
+        "服务提供商": "Sharing with our service providers to assist us in providing services"
+      }
+    },
+    "数据安全": {
+      "标题": "5. Data Security",
+      "内容": "We take reasonable security measures to protect your personal information from unauthorized access, use, or disclosure. However, please note that no security measure is absolutely safe, and we cannot guarantee the absolute security of your information."
+    },
+    "数据保留": {
+      "标题": "6. Data Retention",
+      "内容": "We will retain your personal information for as long as necessary to provide our services and comply with legal and regulatory requirements. When information is no longer needed, we will securely delete or anonymize it."
+    },
+    "用户权利": {
+      "标题": "7. Your Rights",
+      "内容": "Under applicable law, you may have the right to:",
+      "项目": {
+        "访问更正删除": "Access, correct, or delete your personal information",
+        "限制反对": "Restrict or object to our use of your personal information",
+        "数据可携带": "Data portability right",
+        "撤回同意": "Withdraw consent"
+      }
+    },
+    "政策变更": {
+      "标题": "8. Changes to This Privacy Policy",
+      "内容": "We may update this privacy policy from time to time. When we make significant changes, we will notify you through in-app notifications or other means."
+    },
+    "联系我们": {
+      "标题": "9. Contact Us",
+      "内容": "If you have any questions or concerns about this privacy policy, please contact us through the following methods:",
+      "邮箱": "Email"
+    }
+  },
+  "参考文献页面": {
+    "标题": "References"
+  },
+  "赞助页面": {
+    "标题": "Sponsor",
+    "订阅入口": {
+      "标题": "Subscribe to Precise Version",
+      "副标题": "Unlock More Advanced Features",
+      "功能": {
+        "详细计算": "More detailed quantum overlap calculation results",
+        "分类展示": "Display of quantum diffusion arrival rates by category",
+        "数量百分比": "Display of quantum overlap amount and percentage",
+        "定制分享": "Customizable sharing pages"
+      },
+      "立即订阅": "Subscribe Now"
+    },
+    "赞助人员": {
+      "标题": "Sponsors",
+      "副标题": "Thank you to the following sponsors for their support"
+    }
+  },
+  "赞助级别": {
+    "diamond": "Diamond Sponsor",
+    "gold": "Gold Sponsor",
+    "silver": "Silver Sponsor",
+    "bronze": "Bronze Sponsor"
+  },
+  "条款页面": {
+    "标题": "Terms & Conditions",
+    "更新日期": "Last Updated"
+  },
+  "人员管理页面": {
+    "标题": "Person Management",
+    "人员列表": "Person List",
+    "添加人员": "Add Person",
+    "编辑": "Edit",
+    "删除": "Delete",
+    "确认删除": "Are you sure you want to delete this person?",
+    "空状态": {
+      "标题": "No Persons",
+      "描述": "You haven't added any persons yet. Click the button below to add your first person."
+    },
+    "添加第一个人员": "Add First Person"
+  },
+  "条款": {
+    "引言": {
+      "标题": "1. Introduction",
+      "第一段": "Welcome to the Quantum Overlap Calculation Tool. These Terms and Conditions (\"Terms\") set out your rights and obligations for using our application and services (\"Services\").",
+      "第二段": "By accessing or using our Services, you agree to be bound by these Terms. If you do not agree to any part of these Terms, please do not use our Services."
+    },
+    "服务条款": {
+      "标题": "2. Service Terms",
+      "计算模式": "We provide two calculation modes:",
+      "速算版本": "Quick Calculation Version",
+      "速算版本描述": "Free, providing basic quantum overlap calculation functionality",
+      "精算版本": "Precise Calculation Version",
+      "精算版本描述": "Requires subscription, providing more detailed calculation results and analysis",
+      "变更权利": "We reserve the right to modify, suspend, or terminate the Services at any time without prior notice."
+    },
+    "用户权利义务": {
+      "标题": "3. User Rights and Obligations",
+      "您的权利": "Your Rights:",
+      "权利": {
+        "使用服务": "Use the services we provide",
+        "获得结果": "Obtain calculation results",
+        "分享结果": "Share calculation results (in compliance with relevant laws and regulations)"
+      },
+      "您的义务": "Your Obligations:",
+      "义务": {
+        "提供准确信息": "Provide accurate and complete information",
+        "遵守法律": "Comply with applicable laws and regulations",
+        "不滥用服务": "Do not abuse our services",
+        "不侵犯知识产权": "Do not infringe on the intellectual property rights of others"
+      }
+    },
+    "服务变更终止": {
+      "标题": "4. Service Changes and Termination",
+      "第一段": "We may update or modify our Services from time to time. We reserve the right to terminate or suspend the Services at any time without prior notice.",
+      "第二段": "You may stop using our Services at any time."
+    },
+    "知识产权": {
+      "标题": "5. Intellectual Property",
+      "第一段": "Our Services and related content (including but not limited to code, design, images, text, etc.) are protected by intellectual property laws.",
+      "第二段": "You may not copy, modify, distribute, sell, or rent our Services or any part thereof, except with our explicit written permission."
+    },
+    "免责声明": {
+      "标题": "6. Disclaimer",
+      "第一段": "Our Services are for reference and educational purposes only. Calculation results are based on simplified models and assumptions and should not be regarded as scientific facts or medical advice.",
+      "第二段": "We do not guarantee the accuracy, completeness, or reliability of the Services. Any consequences arising from the use of our Services shall be borne by you."
+    },
+    "责任限制": {
+      "标题": "7. Limitation of Liability",
+      "内容": "To the maximum extent permitted by law, we shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use our Services."
+    },
+    "法律适用争议解决": {
+      "标题": "8. Governing Law and Dispute Resolution",
+      "法律管辖": "These Terms shall be governed by the laws of the People's Republic of China.",
+      "争议解决": "Any dispute arising from these Terms or the Services shall be resolved through friendly negotiation; if negotiation fails, it shall be submitted to a people's court with jurisdiction."
+    },
+    "条款变更": {
+      "标题": "9. Changes to These Terms",
+      "第一段": "We may update these Terms from time to time. When we make significant changes, we will notify you through in-app notifications or other means.",
+      "第二段": "Your continued use of our Services constitutes your acceptance of the updated Terms."
+    },
+    "联系我们": {
+      "标题": "10. Contact Us",
+      "内容": "If you have any questions about these Terms, please contact us through the following methods:",
+      "邮箱": "Email"
+    }
+  },
+  "初始化": {
+    "标题": "Welcome",
+    "欢迎": "Welcome to Quantum Bond",
+    "欢迎描述": "Please fill in your personal information to start using the quantum overlap calculation feature.",
+    "姓名占位符": "Please enter your name",
+    "身高占位符": "Please enter your height",
+    "体重占位符": "Please enter your weight",
+    "年龄占位符": "Please enter your age",
+    "姓名必填": "Name is required, please enter your name",
+    "身高必填": "Height is required, please enter a valid height",
+    "体重必填": "Weight is required, please enter a valid weight",
+    "年龄必填": "Age is required, please enter a valid age",
+    "位置格式错误": "Invalid location format, please enter valid coordinates (e.g., 39.9042, 116.4074)",
+    "确认": "Confirm",
+    "加载中": "Initializing application..."
+  }
+}

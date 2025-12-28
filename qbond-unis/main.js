@@ -1,10 +1,12 @@
 import App from './App'
 import store from './store'
+import i18n from './i18n/index'
 
 // #ifndef VUE3
 import Vue from 'vue'
 Vue.config.productionTip = false
 Vue.prototype.$store = store
+Vue.prototype.$i18n = i18n
 Vue.prototype.$adpid = "1111111111"
 Vue.prototype.$backgroundAudioData = {
 	playing: false,
@@ -29,6 +31,7 @@ export function createApp() {
 	const app = createSSRApp(App)
 	app.use(store)
 	app.use(Pinia.createPinia());
+	app.use(i18n);
 	app.config.globalProperties.$adpid = "1111111111"
 	app.config.globalProperties.$backgroundAudioData = {
 		playing: false,
@@ -37,8 +40,8 @@ export function createApp() {
 	}
 	return {
 		app,
-		Vuex, // 如果 nvue 使用 vuex 的各种map工具方法时，必须 return Vuex
-		Pinia // 此处必须将 Pinia 返回
+		Vuex,
+		Pinia
 	}
 }
 // #endif
