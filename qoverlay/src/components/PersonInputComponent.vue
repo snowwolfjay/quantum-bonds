@@ -38,21 +38,11 @@
       </ion-header>
       <ion-content class="ion-padding">
         <div class="person-select-modal">
-          <!-- <h3 class="section-title">{{ t('计算页面.人员.现有人员') }}</h3> -->
-          <ion-list>
-            <ion-item v-for="p in persons" :key="p.id" @click="selectPerson(p)" class="person-list-item">
-              <ion-avatar slot="start">
-                <img
-                  :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(p.name || '?')}&background=random&color=fff&size=64`" />
-              </ion-avatar>
-              <ion-label>
-                <h2>{{ p.name || t('计算页面.人员.未命名') }}</h2>
-                <p>{{ p.age ? `${p.age} ${t('计算页面.人员.岁')}` : t('计算页面.人员.年龄未知') }} | {{ p.height ? `${p.height} cm` :
-                  t('计算页面.人员.身高未知') }} | {{ p.weight ? `${p.weight} kg` : t('计算页面.人员.体重未知') }}</p>
-                <p class="location-info">{{ p.location || t('计算页面.人员.位置未知') }}</p>
-              </ion-label>
-            </ion-item>
-          </ion-list>
+          <PersonListComponent
+            mode="select"
+            :selectedPerson="props.person"
+            @select="selectPerson"
+          />
         </div>
       </ion-content>
     </ion-modal>
@@ -103,23 +93,17 @@ import {
   IonTitle,
   IonButtons,
   IonContent,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonAvatar,
   IonInput
 } from '@ionic/vue';
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import {
   personAddOutline,
-  personAddSharp,
-  settingsOutline,
-  settingsSharp
+  personAddSharp
 } from 'ionicons/icons';
-import { injectDbService, Person } from '../services/dbService';
-import { defaultPerson } from '../config/defaultPerson';
+import { Person } from '../services/dbService';
+import PersonListComponent from './PersonListComponent.vue';
 
 const { t } = useI18n();
 
@@ -133,30 +117,13 @@ const emit = defineEmits<{
 }>();
 
 const router = useRouter();
-const persons = ref<Person[]>([]);
 const isPersonSelectModalOpen = ref(false);
 const isPersonEditModalOpen = ref(false);
 const editPerson = ref<{ name: string; age: number | null }>({ name: '', age: null });
-let unsubscribeFromPersons: (() => void) | null = null;
 
 const isPersonSelected = computed(() => {
   return !!props.person.name || props.person.age != null;
 });
-
-const dbService = injectDbService();
-
-const initData = async () => {
-  try {
-    const dbPersons = await dbService.getAllPersons();
-    persons.value = [defaultPerson, ...dbPersons.filter(person => person.id !== defaultPerson.id)];
-
-    unsubscribeFromPersons = await dbService.watchPersons((newPersons) => {
-      persons.value = [defaultPerson, ...newPersons.filter(person => person.id !== defaultPerson.id)];
-    });
-  } catch (error) {
-    console.error('Failed to load persons:', error);
-  }
-};
 
 const goToPersonManagement = () => {
   router.replace('/persons');
@@ -197,15 +164,7 @@ const selectPerson = (p: Person) => {
   closePersonSelectModal();
 };
 
-onMounted(() => {
-  initData();
-});
-
 onUnmounted(() => {
-  if (unsubscribeFromPersons) {
-    unsubscribeFromPersons();
-    unsubscribeFromPersons = null;
-  }
   isPersonSelectModalOpen.value = false;
   isPersonEditModalOpen.value = false;
 });
@@ -387,56 +346,10 @@ ion-button {
   }
 }
 
-/* 人员选择容器样式 */
-.person-select-container {
-  background-color: var(--ion-card-background-color, #f5f5f5);
-  border: 1px solid var(--ion-border-color, #e0e0e0);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  padding: 20px;
-  margin-bottom: 12px;
-  text-align: center;
-  transition: all 0.2s ease;
-}
-
-.person-select-container:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  border-color: var(--ion-color-primary);
-}
-
 /* 人员选择模态框样式 */
 .person-select-modal {
   max-width: 600px;
   margin: 0 auto;
-}
-
-.section-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--ion-color-primary);
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-/* 人员列表项样式 */
-.person-list-item {
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --min-height: 80px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.person-list-item:hover {
-  --background: rgba(var(--ion-color-primary-rgb), 0.05);
-}
-
-.person-list-item ion-label h2 {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0;
 }
 
 .person-card {
@@ -489,24 +402,21 @@ ion-button {
   white-space: nowrap;
 }
 
-/* 添加人员按钮样式 */
-.add-person-button {
-  margin-top: 20px;
-  --padding-top: 12px;
-  --padding-bottom: 12px;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-/* 深色模式下的人员选择容器 */
 @media (prefers-color-scheme: dark) {
-  .person-select-container {
-    background-color: var(--ion-card-background-color, #1e1e1e);
-    border-color: var(--ion-border-color, #444444);
+  .input-label {
+    color: var(--ion-text-color, #ffffff);
   }
 
-  .person-list-item:hover {
-    --background: rgba(var(--ion-color-primary-rgb), 0.1);
+  .modal-input {
+    background-color: var(--ion-item-background, #1e1e1e);
+    color: var(--ion-text-color, #ffffff);
+    border-color: var(--ion-border-color, #444444);
+    --placeholder-color: var(--ion-color-medium, #9e9e9e);
+  }
+
+  .footer-toolbar {
+    --background: var(--ion-footer-background, #1e1e1e);
+    --border-color: var(--ion-border-color, #444444);
   }
 }
 </style>
