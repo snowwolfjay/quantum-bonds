@@ -5,28 +5,28 @@
         <ion-buttons slot="start">
           <ion-menu-button color="primary"></ion-menu-button>
         </ion-buttons> 
-                <ion-segment v-model="calculationMode" color="primary">
+                <!-- <ion-segment v-model="calculationMode" color="primary" disabled>
                   <ion-segment-button value="quick">
                     <ion-label>{{ $t('计算页面.快速.标题') }}</ion-label>
                   </ion-segment-button>
                   <ion-segment-button value="precise">
                     <ion-label>{{ $t('计算页面.精确.标题') }}</ion-label>
                   </ion-segment-button>
-                </ion-segment>
+                </ion-segment> -->
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true"> 
+    <ion-content :fullscreen="true">
 
       <ion-grid>
         <ion-row>
-          <ion-col size="12" size-md="8" offset-md="2"> 
+          <ion-col size="12" size-md="8" offset-md="2">
 
-              <!-- 速算版本组件 -->
-              <QuickCalcComponent v-if="calculationMode === 'quick'" />
+            <!-- 速算版本组件 -->
+            <QuickCalcComponent v-if="calculationMode === 'quick'" />
 
-              <!-- 精算版本组件 -->
-              <PreciseCalcComponent v-else /> 
+            <!-- 精算版本组件 -->
+            <PreciseCalcComponent v-else />
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -60,6 +60,4 @@ type CalculationMode = 'quick' | 'precise';
 const calculationMode = ref<CalculationMode>('quick');
 </script>
 
-<style scoped>
- 
-</style>
+<style scoped></style>
