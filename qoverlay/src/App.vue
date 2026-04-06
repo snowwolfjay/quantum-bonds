@@ -1,18 +1,10 @@
 <template>
   <ion-app>
     <!-- 加载状态 -->
-    <ion-loading
-      :is-open="isLoading"
-      :message="t('初始化.加载中')"
-      :spinner="spinnerType"
-    ></ion-loading>
+    <ion-loading :is-open="isLoading" :message="t('初始化.加载中')" :spinner="spinnerType"></ion-loading>
 
     <!-- 初始化模态框 -->
-    <InitModalComponent
-      :is-open="showInitModal"
-      @close="handleInitModalClose"
-      @confirm="handleInitModalConfirm"
-    />
+    <InitModalComponent :is-open="showInitModal" @close="handleInitModalClose" @confirm="handleInitModalConfirm" />
 
     <ion-split-pane content-id="main-content">
       <ion-menu content-id="main-content" type="overlay">
@@ -21,25 +13,20 @@
             <ion-list-header>{{ $t("导航菜单.标题") }}</ion-list-header>
             <ion-note>{{ $t("导航菜单.副标题") }}</ion-note>
 
-            <ion-menu-toggle
-              :auto-hide="false"
-              v-for="(p, i) in appPages"
-              :key="i"
-            >
-              <ion-item
-                router-direction="root"
-                :router-link="p.url"
-                lines="none"
-                :detail="false"
-                class="hydrated"
-                :class="{ selected: selectedIndex === i }"
-              >
-                <ion-icon
-                  aria-hidden="true"
-                  slot="start"
-                  :ios="p.iosIcon"
-                  :md="p.mdIcon"
-                ></ion-icon>
+            <ion-menu-toggle :auto-hide="false" v-for="(p, i) in appPages" :key="i">
+              <ion-item router-direction="root" :router-link="p.url" lines="none" :detail="false" class="hydrated"
+                :class="{ selected: selectedPage === p.key }">
+                <ion-icon aria-hidden="true" slot="start" :ios="p.iosIcon" :md="p.mdIcon"></ion-icon>
+                <ion-label>{{ $t(`导航菜单.页面.${p.key}`) }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          
+            <div class="sep"></div>
+
+            <ion-menu-toggle :auto-hide="false" v-for="(p, i) in docPages" :key="i">
+              <ion-item router-direction="root" :router-link="p.url" lines="none" :detail="false" class="hydrated"
+                :class="{ selected: selectedPage === p.key }">
+                <ion-icon aria-hidden="true" slot="start" :ios="p.iosIcon" :md="p.mdIcon"></ion-icon>
                 <ion-label>{{ $t(`导航菜单.页面.${p.key}`) }}</ion-label>
               </ion-item>
             </ion-menu-toggle>
@@ -48,25 +35,13 @@
           <!-- 语言切换 -->
           <ion-list class="language-list">
             <ion-list-header>
-              <ion-icon
-                slot="start"
-                :ios="languageOutline"
-                :md="languageSharp"
-              ></ion-icon>
+              <ion-icon slot="start" :ios="languageOutline" :md="languageSharp"></ion-icon>
               {{ $t("导航菜单.语言") }}
             </ion-list-header>
             <ion-item>
-              <ion-select
-                :model-value="i18n.global.locale.value"
-                @ionChange="handleLanguageChange"
-                placeholder="选择语言"
-                interface="popover"
-              >
-                <ion-select-option
-                  v-for="lang in languages"
-                  :key="lang.value"
-                  :value="lang.value"
-                >
+              <ion-select :model-value="i18n.global.locale.value" @ionChange="handleLanguageChange" placeholder="选择语言"
+                interface="popover">
+                <ion-select-option v-for="lang in languages" :key="lang.value" :value="lang.value">
                   {{ lang.label }}
                 </ion-select-option>
               </ion-select>
@@ -138,7 +113,7 @@ const isLoading = ref(true);
 const showInitModal = ref(false);
 const spinnerType = ref("dots");
 
-const selectedIndex = ref(0);
+const selectedPage = ref("");
 const appPages = [
   {
     key: "计算器",
@@ -152,6 +127,22 @@ const appPages = [
     iosIcon: personOutline,
     mdIcon: personSharp,
   },
+
+  {
+    key: "反馈",
+    url: "/feedback",
+    iosIcon: chatbubbleOutline,
+    mdIcon: chatbubbleSharp,
+  },
+  {
+    key: "赞助",
+    url: "/sponsor",
+    iosIcon: heartOutline,
+    mdIcon: heartSharp,
+  },
+];
+
+const docPages = [
   {
     key: "关于我们",
     url: "/about",
@@ -182,23 +173,13 @@ const appPages = [
     iosIcon: helpCircleOutline,
     mdIcon: helpCircleSharp,
   },
-  {
-    key: "反馈",
-    url: "/feedback",
-    iosIcon: chatbubbleOutline,
-    mdIcon: chatbubbleSharp,
-  },
-  {
-    key: "赞助",
-    url: "/sponsor",
-    iosIcon: heartOutline,
-    mdIcon: heartSharp,
-  },
-];
+]
+
+const pages = [...appPages, ...docPages];
 
 const path = window.location.pathname;
 if (path !== undefined) {
-  selectedIndex.value = appPages.findIndex((page) => page.url === path) || 0;
+  selectedPage.value = pages.find((page) => page.url === path)?.key || "";
 }
 
 // 语言切换
@@ -268,13 +249,20 @@ onMounted(async () => {
 watch(
   () => router.currentRoute.value.path,
   (newPath) => {
-    selectedIndex.value =
-      appPages.findIndex((page) => page.url.startsWith(newPath)) || 0;
+    selectedPage.value =
+      pages.find((page) => page.url === newPath)?.key || "";
+    console.log("Current path:", newPath, "Selected page:", selectedPage.value);
   }
 );
 </script>
 
 <style scoped>
+.sep {
+  height: 1px;
+  background-color: var(--ion-background-color-step-150, #d7d8da);
+  margin: 20px 0;
+}
+
 ion-menu ion-content {
   --background: var(--ion-item-background, var(--ion-background-color, #fff));
 }

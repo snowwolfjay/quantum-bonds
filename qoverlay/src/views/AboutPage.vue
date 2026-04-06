@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
+    <ion-header >
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-menu-button color="primary"></ion-menu-button>
@@ -9,13 +9,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">{{ t('关于页面.标题') }}</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
+    <ion-content >
       <ion-grid>
         <ion-row>
           <ion-col size="12" size-md="8" offset-md="2">

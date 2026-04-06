@@ -38,7 +38,7 @@
       </ion-header>
       <ion-content class="ion-padding">
         <div class="person-select-modal">
-          <h3 class="section-title">{{ t('计算页面.人员.现有人员') }}</h3>
+          <!-- <h3 class="section-title">{{ t('计算页面.人员.现有人员') }}</h3> -->
           <ion-list>
             <ion-item v-for="p in persons" :key="p.id" @click="selectPerson(p)" class="person-list-item">
               <ion-avatar slot="start">
