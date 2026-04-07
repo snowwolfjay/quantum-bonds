@@ -1,0 +1,120 @@
+
+
+export const NearMathEquation = `
+<math display="block">
+  <msub>
+    <mi>N</mi>
+    <mtext>breath</mtext>
+  </msub>
+  <mo>≈</mo>
+  <mfrac>
+    <msup>
+      <mfenced>
+        <mrow>
+          <mi>R</mi>
+          <mo>·</mo>
+          <mi>t</mi>
+          <mo>·</mo>
+          <msub>
+            <mi>V</mi>
+            <mi>b</mi>
+          </msub>
+          <mo>·</mo>
+          <mfrac>
+            <msub>
+              <mi>N</mi>
+              <mi>A</mi>
+            </msub>
+            <msub>
+              <mi>V</mi>
+              <mi>m</mi>
+            </msub>
+          </mfrac>
+        </mrow>
+      </mfenced>
+      <mn>2</mn>
+    </msup>
+    <msub>
+      <mi>V</mi>
+      <mtext>atmo</mtext>
+    </msub>
+  </mfrac>
+</math>
+`
+
+export const ParticleMathEquation = `
+<math display="block">
+  <msub>
+    <mi>N</mi>
+    <mtext>dust</mtext>
+  </msub>
+  <mo>=</mo>
+  <mfenced>
+    <mrow>
+      <mfrac>
+        <mrow>
+          <msub>
+            <mi>m</mi>
+            <mtext>shed</mtext>
+          </msub>
+          <mo>·</mo>
+          <mi>t</mi>
+        </mrow>
+        <msub>
+          <mi>M</mi>
+          <mtext>avg</mtext>
+        </msub>
+      </mfrac>
+      <mo>·</mo>
+      <msub>
+        <mi>N</mi>
+        <mi>A</mi>
+      </msub>
+    </mrow>
+  </mfenced>
+  <mo>·</mo>
+  <mi>η</mi>
+  <mo>(</mo>
+  <mi>d</mi>
+  <mo>)</mo>
+</math>
+
+`
+
+export const ContactMathEquation = `<math display="block">
+  <msub>
+    <mi>N</mi>
+    <mtext>contact</mtext>
+  </msub>
+  <mo>=</mo>
+  <munderover>
+    <mo>∑</mo>
+    <mrow>
+      <mi>i</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mi>k</mi>
+  </munderover>
+  <mfenced>
+    <mrow>
+      <mfrac>
+        <msub>
+          <mi>m</mi>
+          <mtext>transfer</mtext>
+        </msub>
+        <msub>
+          <mi>M</mi>
+          <mtext>avg</mtext>
+        </msub>
+      </mfrac>
+      <mo>·</mo>
+      <msub>
+        <mi>N</mi>
+        <mi>A</mi>
+      </msub>
+    </mrow>
+  </mfenced>
+</math>
+`
+

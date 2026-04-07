@@ -31,7 +31,7 @@ export interface QuickCalcParams {
 
 
 // 计算两点之间的距离（米）
-function calculateDistance(coord1: Coordinates, coord2: Coordinates): number {
+export function calculateDistance(coord1: Coordinates, coord2: Coordinates): number {
   const R = 6371e3; // 地球半径，单位：米
   const φ1 = (coord1.lat * Math.PI) / 180;
   const φ2 = (coord2.lat * Math.PI) / 180;

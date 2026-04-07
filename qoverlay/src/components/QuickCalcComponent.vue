@@ -2,21 +2,13 @@
   <div class="quick-calc-container">
     <!-- 输入部分 -->
     <div class="input-section">
-      <h2 class="section-title">{{ t('计算页面.快速.副标题') }}</h2>
-      
+      <!-- <h2 class="section-title">{{ t('计算页面.快速.副标题') }}</h2> -->
+
       <!-- 人体 A 输入组件 -->
-      <PersonInputComponent 
-        :title="t('计算页面.人员.A')" 
-        :person="personA" 
-        @update="updatePersonA" 
-      />
+      <PersonInputComponent :title="t('计算页面.人员.A')" :person="personA" @update="updatePersonA" />
 
       <!-- 人体 B 输入组件 -->
-      <PersonInputComponent 
-        :title="t('计算页面.人员.B')" 
-        :person="personB" 
-        @update="updatePersonB" 
-      />
+      <PersonInputComponent :title="t('计算页面.人员.B')" :person="personB" @update="updatePersonB" />
 
       <!-- 自动计算的最小年龄显示 -->
       <div class="minimum-age-section">
@@ -26,15 +18,22 @@
             {{ minimumAge ? `${minimumAge} ${t('计算页面.人员.岁')}` : t('计算页面.错误.年龄未计算') }}
           </div>
         </div>
+        <div class="distance-edit">
+          <!-- 预设距离输入框 -->
+          <label class="input-label">{{ t('计算页面.预设距离') }}</label>
+          <input type="number" class="custom-input" v-model.number="distanceInput" placeholder="米" min="0" />
+        </div>
       </div>
 
       <!-- 错误信息显示 -->
       <div v-if="errorMessage" class="error-message">
-        {{ errorMessage }}
+        <ion-text color="danger">
+          {{ errorMessage }}
+        </ion-text>
       </div>
 
       <!-- 计算按钮 -->
-      <ion-button expand="block" color="primary" @click="calculate" :disabled="!isFormValid">
+      <ion-button expand="block" color="primary" @click="calculate">
         {{ t('计算页面.快速.计算') }}
       </ion-button>
     </div>
@@ -107,12 +106,7 @@
           </div>
         </div>
 
-        <canvas
-          ref="shareCanvas"
-          width="720"
-          height="1270"
-          class="share-canvas hidden-canvas"
-        ></canvas>
+        <canvas ref="shareCanvas" width="720" height="1270" class="share-canvas hidden-canvas"></canvas>
       </ion-content>
     </ion-modal>
   </div>
@@ -120,26 +114,25 @@
 
 <script setup lang="ts">
 import {
-  IonCard,
+  IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonCardContent,
-  IonItemDivider,
-  IonLabel,
-  IonButton,
-  IonIcon,
-  IonModal,
+  IonSpinner,
+  IonContent,
   IonToolbar,
   IonButtons,
+  IonButton,
   IonHeader,
   IonTitle,
-  IonContent,
-  IonSpinner
+  IonModal,
+  IonText,
+  IonCard,
+  IonIcon
 } from '@ionic/vue';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { shareOutline, shareSharp } from 'ionicons/icons';
-import { calculateQuickQuantumOverlap } from '../utils/quickCalc';
+import { calculateDistance, calculateQuickQuantumOverlap } from '../utils/quickCalc';
 import { drawShareContent, canvasToBase64, shareImage } from '../utils/shareUtils';
 import PersonInputComponent from './PersonInputComponent.vue';
 
@@ -211,17 +204,25 @@ const shareCanvas = ref<HTMLCanvasElement | null>(null);
 const overlapPercentage = ref(0);
 
 // 表单验证
-const isFormValid = computed(() => {
-  return (
-    personA.value.location &&
-    personA.value.weight &&
-    personA.value.height &&
-    personB.value.location &&
-    personB.value.weight &&
-    personB.value.height &&
-    minimumAge.value !== null
-  );
-});
+const isFormValid = () => {
+  if (!personA.value.weight || !personA.value.height) {
+    errorMessage.value = t('计算页面.错误.人员A信息不完整');
+    return false;
+  }
+  if (!personB.value.weight || !personB.value.height) {
+    errorMessage.value = t('计算页面.错误.人员B信息不完整');
+    return false;
+  }
+  if (!distanceInput.value) {
+    errorMessage.value = t('计算页面.错误.距离未设置');
+    return false;
+  }
+  if (minimumAge.value === null || minimumAge.value <= 0) {
+    errorMessage.value = t('计算页面.错误.年龄未计算');
+    return false;
+  }
+  return true
+}
 
 // 解析位置坐标字符串为经纬度
 function parseLocation(locationStr: string) {
@@ -239,7 +240,7 @@ const updatePersonA = (newPerson: Person) => {
   personA.value = { ...newPerson };
   errorMessage.value = '';
 };
-
+const distanceInput = ref<number>(0);
 // 更新人体 B 数据
 const updatePersonB = (newPerson: Person) => {
   // 检查是否与人员A相同
@@ -251,15 +252,29 @@ const updatePersonB = (newPerson: Person) => {
   errorMessage.value = '';
 };
 
+
+watch(() => [personA.value, personB.value], () => {
+  // 每当人员数据变化时，重置错误信息
+  errorMessage.value = '';
+  if (personA.value.location && personB.value.location) {
+    const locA = parseLocation(personA.value.location);
+    const locB = parseLocation(personB.value.location);
+    const distance = calculateDistance(locA, locB);
+    distanceInput.value = Math.round(distance);
+  }
+});
+
 // 计算量子重叠
 const calculate = () => {
-  if (!isFormValid.value) return;
-  
+  if (!isFormValid()) {
+    return;
+  }
+
   try {
     // 解析坐标
     const locationA = parseLocation(personA.value.location);
     const locationB = parseLocation(personB.value.location);
-    
+
     // 执行计算
     const overlapAmount = calculateQuickQuantumOverlap({
       personA: {
@@ -274,7 +289,7 @@ const calculate = () => {
       },
       minimumAge: minimumAge.value!
     });
-    
+
     // 更新结果并打开结果模态
     result.value.overlapAmount = overlapAmount;
     isResultModalOpen.value = true;
@@ -327,11 +342,11 @@ const closeResultModal = () => {
 // 绘制分享内容到Canvas
 const renderShareCanvas = () => {
   if (!shareCanvas.value) return;
-  
+
   // 使用默认名称或实际名称
   const personAName = personA.value.name || t('计算页面.人员.A');
   const personBName = personB.value.name || t('计算页面.人员.B');
-  
+
   // 绘制Canvas内容
   drawShareContent(shareCanvas.value, personAName, personBName, result.value.overlapAmount, overlapPercentage.value);
 };
@@ -339,9 +354,9 @@ const renderShareCanvas = () => {
 // 从Canvas分享
 const shareFromCanvas = () => {
   if (!shareCanvas.value) return;
-  
+
   const imageUrl = sharePreviewUrl.value || canvasToBase64(shareCanvas.value);
-  
+
   // 调用系统分享
   shareImage(
     t('分享.标题'),
@@ -522,6 +537,10 @@ ion-button {
   max-width: 280px;
 }
 
+.distane-edit {
+  margin-top: 12px;
+}
+
 .share-preview-section {
   display: flex;
   flex-direction: column;
@@ -549,7 +568,7 @@ ion-button {
   .share-canvas-container {
     background-color: #1e1e1e;
   }
-  
+
   .share-canvas {
     border-color: #444444;
   }
