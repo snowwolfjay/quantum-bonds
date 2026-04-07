@@ -67,9 +67,9 @@
             <ion-icon slot="start" :ios="shareOutline" :md="shareSharp"></ion-icon>
             {{ t('计算页面.快速.分享') }}
           </ion-button>
-          <ion-button expand="block" @click="closeResultModal">
+          <!-- <ion-button expand="block" @click="closeResultModal">
             {{ t('编辑模态框.取消') }}
-          </ion-button>
+          </ion-button> -->
         </div>
       </ion-content>
     </ion-modal>
@@ -100,17 +100,17 @@
                 <ion-icon slot="start" :ios="shareOutline" :md="shareSharp"></ion-icon>
                 {{ t('计算页面.快速.立即分享') }}
               </ion-button>
-              <ion-button expand="block" @click="closeShareModal">
+              <!-- <ion-button expand="block" @click="closeShareModal">
                 {{ t('编辑模态框.取消') }}
-              </ion-button>
+              </ion-button> -->
             </div>
           </div>
         </div>
 
         <canvas
           ref="shareCanvas"
-          width="600"
-          height="300"
+          width="720"
+          height="1270"
           class="share-canvas hidden-canvas"
         ></canvas>
       </ion-content>
