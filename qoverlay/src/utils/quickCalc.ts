@@ -25,6 +25,7 @@ export interface QuickCalcParams {
     height: number;
   };
   minimumAge: number;
+  distance?: number; // 可选参数，预设距离（米），如果不提供则计算实际距离
 }
 
 
@@ -98,7 +99,7 @@ export function calculateQuickQuantumOverlap(params: QuickCalcParams): number {
   const symbiosisTime = calculateSymbiosisTime(params.minimumAge);
 
   // 3. 计算距离（米）
-  const distance = calculateDistance(params.personA.location, params.personB.location);
+  const distance = params.distance ?? calculateDistance(params.personA.location, params.personB.location);
   const averageDistance = calculateAverageDistance(distance);
 
   // 4. 估算A的分钟级量子交换数量

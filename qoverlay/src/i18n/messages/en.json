@@ -23,7 +23,11 @@
       "结果": "Calculation Result",
       "重叠数量": "Total Quantum Overlap",
       "重叠描述": "Total quantum overlap between Person A and Person B",
-      "分享": "Share Result"
+      "分享": "Share Result",
+      "分享渲染中": "Rendering share image...",
+      "分享渲染说明": "The share image will be ready shortly so you can upload it immediately.",
+      "分享预览": "Share Preview",
+      "立即分享": "Share Now"
     },
     "精确": {
       "标题": "Advanced",

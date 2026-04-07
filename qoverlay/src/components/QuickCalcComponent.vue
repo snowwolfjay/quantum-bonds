@@ -39,27 +39,40 @@
       </ion-button>
     </div>
 
-    <!-- 结果展示部分 -->
-    <div v-if="showResult" class="result-section">
-      
-      <ion-card class="result-card">
-        <ion-card-header>
-          <ion-card-title>{{ t('计算页面.快速.结果') }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <div class="result-value">{{ result.overlapAmount.toExponential(2) }}</div>
-          <div class="result-description">
-            {{ t('计算页面.快速.重叠描述') }}
-          </div>
-        </ion-card-content>
-      </ion-card>
+    <!-- 结果模态窗口 -->
+    <ion-modal :is-open="isResultModalOpen" @did-dismiss="closeResultModal">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ t('计算页面.快速.结果') }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button @click="closeResultModal">{{ t('编辑模态框.取消') }}</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-card class="result-card">
+          <ion-card-header>
+            <ion-card-title>{{ t('计算页面.快速.结果') }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="result-value">{{ result.overlapAmount.toExponential(2) }}</div>
+            <div class="result-description">
+              {{ t('计算页面.快速.重叠描述') }}
+            </div>
+          </ion-card-content>
+        </ion-card>
 
-      <!-- 分享按钮 -->
-      <ion-button expand="block" color="secondary" @click="openShareModal">
-        <ion-icon slot="start" :ios="shareOutline" :md="shareSharp"></ion-icon>
-        {{ t('计算页面.快速.分享') }}
-      </ion-button>
-    </div>
+        <div class="share-actions">
+          <ion-button expand="block" color="secondary" @click="openShareModal">
+            <ion-icon slot="start" :ios="shareOutline" :md="shareSharp"></ion-icon>
+            {{ t('计算页面.快速.分享') }}
+          </ion-button>
+          <ion-button expand="block" @click="closeResultModal">
+            {{ t('编辑模态框.取消') }}
+          </ion-button>
+        </div>
+      </ion-content>
+    </ion-modal>
 
     <!-- 分享模态窗口 -->
     <ion-modal :is-open="isShareModalOpen" @did-dismiss="closeShareModal">
@@ -72,26 +85,34 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <!-- Canvas 容器 -->
-        <div class="share-canvas-container">
-          <canvas 
-            ref="shareCanvas" 
-            width="600" 
-            height="300" 
-            class="share-canvas"
-          ></canvas>
+        <div class="share-modal-content">
+          <div v-if="isShareRendering" class="share-progress">
+            <ion-spinner name="crescent"></ion-spinner>
+            <div class="share-progress-text">{{ t('计算页面.快速.分享渲染中') }}</div>
+            <div class="share-progress-description">{{ t('计算页面.快速.分享渲染说明') }}</div>
+          </div>
+
+          <div v-else class="share-preview-section">
+            <div class="share-preview-title">{{ t('计算页面.快速.分享预览') }}</div>
+            <img v-if="sharePreviewUrl" :src="sharePreviewUrl" alt="share preview" class="share-preview-image" />
+            <div class="share-actions">
+              <ion-button expand="block" color="primary" @click="shareFromCanvas">
+                <ion-icon slot="start" :ios="shareOutline" :md="shareSharp"></ion-icon>
+                {{ t('计算页面.快速.立即分享') }}
+              </ion-button>
+              <ion-button expand="block" @click="closeShareModal">
+                {{ t('编辑模态框.取消') }}
+              </ion-button>
+            </div>
+          </div>
         </div>
 
-        <!-- 操作按钮 -->
-        <div class="share-actions">
-          <ion-button expand="block" color="primary" @click="shareFromCanvas">
-            <ion-icon slot="start" :ios="shareOutline" :md="shareSharp"></ion-icon>
-            {{ t('计算页面.快速.分享') }}
-          </ion-button>
-          <ion-button expand="block" @click="closeShareModal">
-            {{ t('编辑模态框.取消') }}
-          </ion-button>
-        </div>
+        <canvas
+          ref="shareCanvas"
+          width="600"
+          height="300"
+          class="share-canvas hidden-canvas"
+        ></canvas>
       </ion-content>
     </ion-modal>
   </div>
@@ -112,9 +133,10 @@ import {
   IonButtons,
   IonHeader,
   IonTitle,
-  IonContent
+  IonContent,
+  IonSpinner
 } from '@ionic/vue';
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { shareOutline, shareSharp } from 'ionicons/icons';
 import { calculateQuickQuantumOverlap } from '../utils/quickCalc';
@@ -168,13 +190,19 @@ const minimumAge = computed(() => {
 const errorMessage = ref('');
 
 // 初始化结果数据
-const showResult = ref(false);
 const result = ref<CalculationResult>({
   overlapAmount: 0
 });
 
+// 结果模态窗口状态
+const isResultModalOpen = ref(false);
+
 // 分享模态窗口状态
 const isShareModalOpen = ref(false);
+const isShareRendering = ref(false);
+const sharePreviewUrl = ref('');
+const shareRenderTimeout = ref<number | null>(null);
+const SHARE_RENDER_DELAY = 2000;
 
 // Canvas引用
 const shareCanvas = ref<HTMLCanvasElement | null>(null);
@@ -247,27 +275,53 @@ const calculate = () => {
       minimumAge: minimumAge.value!
     });
     
-    // 更新结果
+    // 更新结果并打开结果模态
     result.value.overlapAmount = overlapAmount;
-    showResult.value = true;
+    isResultModalOpen.value = true;
   } catch (error) {
     console.error('计算错误:', error);
     alert(t('错误.计算失败'));
   }
 };
 
+const resetShareState = () => {
+  isShareRendering.value = false;
+  sharePreviewUrl.value = '';
+  if (shareRenderTimeout.value !== null) {
+    window.clearTimeout(shareRenderTimeout.value);
+    shareRenderTimeout.value = null;
+  }
+};
+
 // 打开分享模态窗口
 const openShareModal = () => {
   isShareModalOpen.value = true;
-  // 延迟绘制，确保Canvas已经渲染
-  setTimeout(() => {
+  isShareRendering.value = true;
+  sharePreviewUrl.value = '';
+
+  if (shareRenderTimeout.value !== null) {
+    window.clearTimeout(shareRenderTimeout.value);
+  }
+
+  shareRenderTimeout.value = window.setTimeout(() => {
     renderShareCanvas();
-  }, 100);
+    if (shareCanvas.value) {
+      sharePreviewUrl.value = canvasToBase64(shareCanvas.value);
+    }
+    isShareRendering.value = false;
+    shareRenderTimeout.value = null;
+  }, SHARE_RENDER_DELAY);
 };
 
 // 关闭分享模态窗口
 const closeShareModal = () => {
   isShareModalOpen.value = false;
+  resetShareState();
+};
+
+// 关闭结果模态窗口
+const closeResultModal = () => {
+  isResultModalOpen.value = false;
 };
 
 // 绘制分享内容到Canvas
@@ -286,8 +340,7 @@ const renderShareCanvas = () => {
 const shareFromCanvas = () => {
   if (!shareCanvas.value) return;
   
-  // 将Canvas转换为base64
-  const imageUrl = canvasToBase64(shareCanvas.value);
+  const imageUrl = sharePreviewUrl.value || canvasToBase64(shareCanvas.value);
   
   // 调用系统分享
   shareImage(
@@ -434,6 +487,61 @@ ion-button {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.hidden-canvas {
+  display: none;
+}
+
+.share-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.share-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-height: 220px;
+  justify-content: center;
+  text-align: center;
+}
+
+.share-progress-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ion-text-color);
+}
+
+.share-progress-description {
+  font-size: 14px;
+  color: var(--ion-color-medium);
+  max-width: 280px;
+}
+
+.share-preview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+}
+
+.share-preview-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ion-text-color);
+}
+
+.share-preview-image {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* Dark mode specific styles */
