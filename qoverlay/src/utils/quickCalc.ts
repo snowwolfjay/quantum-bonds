@@ -84,8 +84,8 @@ function calculateIndirectExchange(quantumExchangeRate: number): number {
 
 // 计算跃迁量子交换量
 function calculateTransitionExchange(quantumExchangeRate: number, distance: number): number {
-  // 与距离成正比
-  const distanceFactor = distance / 1000.0; // 距离因子，以公里为单位
+  // 与距离成反比，距离越远交换量越小
+  const distanceFactor = 1.0 / (1.0 + Math.pow(distance / 1000.0, 2)); // 距离因子，以公里为单位
   return TRANSITION_EXCHANGE_COEFFICIENT * quantumExchangeRate * distanceFactor;
 }
 
@@ -95,6 +95,8 @@ export function calculateQuickQuantumOverlap(params: QuickCalcParams): number {
   const quantumCountA = calculateQuantumCount(params.personA.weight, params.personA.height);
   const quantumCountB = calculateQuantumCount(params.personB.weight, params.personB.height);
 
+  console.log('量子数量 A:', quantumCountA);
+  console.log('量子数量 B:', quantumCountB);
   // 2. 计算共生时间（分钟）
   const symbiosisTime = calculateSymbiosisTime(params.minimumAge);
 

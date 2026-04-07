@@ -54,7 +54,7 @@
             <ion-card-title>{{ t('计算页面.快速.结果') }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <div class="result-value">{{ result.overlapAmount.toExponential(2) }}</div>
+            <div class="result-value">{{ result.overlapAmount.toLocaleString('zh-CN', { maximumFractionDigits: 0 }) }}</div>
             <div class="result-description">
               {{ t('计算页面.快速.重叠描述') }}
             </div>
@@ -135,6 +135,7 @@ import { shareOutline, shareSharp } from 'ionicons/icons';
 import { calculateDistance, calculateQuickQuantumOverlap } from '../utils/quickCalc';
 import { drawShareContent, canvasToBase64, shareImage } from '../utils/shareUtils';
 import PersonInputComponent from './PersonInputComponent.vue';
+import { calculateTotalOverlap } from '@/services/quick-calc';
 
 // 国际化
 const { t } = useI18n();
@@ -274,7 +275,11 @@ const calculate = () => {
     // 解析坐标
     const locationA = parseLocation(personA.value.location);
     const locationB = parseLocation(personB.value.location);
-
+    const val = calculateTotalOverlap(
+      minimumAge.value!,
+      distanceInput.value / 1000
+    )
+    console.log('计算得到的总重叠量:', val);
     // 执行计算
     const overlapAmount = calculateQuickQuantumOverlap({
       personA: {
@@ -287,11 +292,12 @@ const calculate = () => {
         weight: personB.value.weight!,
         height: personB.value.height!
       },
-      minimumAge: minimumAge.value!
+      minimumAge: minimumAge.value!,
+      distance: distanceInput.value
     });
 
     // 更新结果并打开结果模态
-    result.value.overlapAmount = overlapAmount;
+    result.value.overlapAmount = val.total;
     isResultModalOpen.value = true;
   } catch (error) {
     console.error('计算错误:', error);

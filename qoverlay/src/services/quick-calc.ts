@@ -1,7 +1,10 @@
+import { C } from "vue-router/dist/router-CWoNjPRp.mjs";
+
 /**
  * 量子重叠计算器模块
  */
 const CONSTANTS = {
+    DT: 10,   // 亲密接触每日交换量 (g)
     NA: 6.02214076e23,      // 阿伏伽德罗常数
     VM: 24.5,               // 常温常压气体摩尔体积 (L/mol)
     V_ATMO: 4.0e21,         // 对流层总体积 (L)
@@ -47,7 +50,7 @@ function calcContactOverlap(years: number, isClose: boolean) {
     if (!isClose) return 0;
 
     // 假设密切接触者（如家人、伴侣）每天产生 0.01g 的直接物质转移（汗液、皮脂等）
-    const dailyTransferMass = 0.01;
+    const dailyTransferMass = CONSTANTS.DT; // g
     const totalTransferAtoms = (dailyTransferMass * 365 * years / CONSTANTS.AVG_MOLAR_MASS) * CONSTANTS.NA;
 
     return totalTransferAtoms;

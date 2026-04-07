@@ -33,62 +33,122 @@ export function drawShareContent(
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  // 设置Canvas尺寸
   const width = canvas.width;
   const height = canvas.height;
 
-  // 清空Canvas
-  ctx.clearRect(0, 0, width, height);
-
-  // 设置背景色
-  ctx.fillStyle = '#ffffff';
+  // 背景渐变
+  const gradient = ctx.createLinearGradient(0, 0, width, height);
+  gradient.addColorStop(0, '#eef3ff');
+  gradient.addColorStop(1, '#c8daff');
+  ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
 
-  // 绘制边框
-  ctx.strokeStyle = '#e0e0e0';
-  ctx.lineWidth = 1;
-  ctx.strokeRect(0, 0, width, height);
+  const padding = Math.round(width * 0.05);
+  const cardWidth = width - padding * 2;
+  const cardHeight = height - padding * 2;
+  const cardRadius = Math.round(width * 0.03);
 
-  // 设置文本样式
-  ctx.font = '16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-  ctx.fillStyle = '#333333';
+  // 绘制白卡片
+  ctx.fillStyle = '#ffffff';
+  roundRect(ctx, padding, padding, cardWidth, cardHeight, cardRadius, true, false);
+
+  const centerX = width / 2;
+  let currentY = padding + Math.round(cardHeight * 0.16);
+
   ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#1f355f';
+  ctx.font = `bold ${Math.round(width * 0.045)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
 
-  // 绘制标题文本
   const title = `${personAName}体内来自${personBName}的量子累计数量：`;
-  ctx.font = 'bold 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-  ctx.fillText(title, width / 2, 60);
+  currentY = wrapText(ctx, title, centerX, currentY, cardWidth - padding * 2, Math.round(width * 0.065));
+  currentY += 20;
 
-  // 绘制重叠数量（大写数字格式）
   const formattedAmount = formatNumber(overlapAmount);
-  ctx.font = 'bold 48px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-  ctx.fillStyle = '#007aff';
-  ctx.fillText(formattedAmount, width / 2, 140);
+  ctx.fillStyle = '#2566ff';
+  ctx.font = `bold ${Math.round(width * 0.12)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
+  ctx.fillText(formattedAmount, centerX, currentY);
+  currentY += Math.round(width * 0.14);
 
-  // 绘制百分比
-  ctx.font = '24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-  ctx.fillStyle = '#666666';
+  ctx.fillStyle = '#63718f';
+  ctx.font = `bold ${Math.round(width * 0.05)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
   const percentageText = `${(overlapPercentage * 100).toFixed(4)}%`;
-  ctx.fillText(percentageText, width / 2, 180);
+  ctx.fillText(percentageText, centerX, currentY);
+  currentY += Math.round(width * 0.08);
 
-  // 绘制分隔线
   ctx.beginPath();
-  ctx.moveTo(40, 220);
-  ctx.lineTo(width - 40, 220);
-  ctx.strokeStyle = '#e0e0e0';
-  ctx.lineWidth = 1;
+  ctx.moveTo(padding + 60, currentY);
+  ctx.lineTo(width - padding - 60, currentY);
+  ctx.strokeStyle = '#e2e8f8';
+  ctx.lineWidth = 2;
   ctx.stroke();
+  currentY += 40;
 
-  // 绘制说明文本
-  ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-  ctx.fillStyle = '#999999';
-  ctx.fillText('数据来源于量子重叠计算工具', width / 2, 260);
+  ctx.font = `${Math.round(width * 0.035)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
+  ctx.fillStyle = '#8f97b4';
+  ctx.fillText('数据来源于量子重叠计算工具', centerX, currentY);
 
-  // 绘制水印
-  ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
   ctx.textAlign = 'right';
-  ctx.fillText(appName, width - 20, height - 20);
+  ctx.font = `${Math.round(width * 0.028)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+  ctx.fillText(appName, width - padding - 20, height - padding - 20);
+}
+
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+  fill: boolean,
+  stroke: boolean
+) {
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + width - r, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+  ctx.lineTo(x + width, y + height - r);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+  ctx.lineTo(x + r, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+  if (fill) ctx.fill();
+  if (stroke) ctx.stroke();
+}
+
+function wrapText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number
+): number {
+  const characters = Array.from(text);
+  let line = '';
+
+  for (let i = 0; i < characters.length; i++) {
+    const testLine = line + characters[i];
+    const metrics = ctx.measureText(testLine);
+    if (metrics.width > maxWidth && line !== '') {
+      ctx.fillText(line, x, y);
+      line = characters[i];
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+
+  if (line) {
+    ctx.fillText(line, x, y);
+    y += lineHeight;
+  }
+
+  return y;
 }
 
 /**

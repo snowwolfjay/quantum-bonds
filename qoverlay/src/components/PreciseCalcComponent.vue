@@ -54,7 +54,7 @@
         <!-- 累计量子重叠数量 -->
         <div class="result-section">
           <h3>{{ t('计算页面.精确.重叠数量') }}</h3>
-          <div class="result-value">{{ result.overlapAmount.toExponential(2) }}</div>
+          <div class="result-value">{{ result.overlapAmount.toLocaleString('zh-CN', { maximumFractionDigits: 0 }) }}</div>
         </div>
 
         <!-- 量子重叠百分比 -->
