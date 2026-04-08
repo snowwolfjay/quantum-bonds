@@ -5,7 +5,7 @@
         <div>
           <h3 class="person-title">{{ title }}</h3>
           <div class="person-subtitle">
-            {{ isPersonSelected ? t('计算页面.人员.已录入') : t('计算页面.人员.未录入提示') }}
+            {{ isPersonSelected ? t('计算页面.人员.已录入') : t('计算页面.人员.未设置提示') }}
           </div>
         </div>
         <ion-button fill="clear" color="primary" @click.stop="openPersonSelectModal">

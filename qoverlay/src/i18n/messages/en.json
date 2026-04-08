@@ -73,7 +73,8 @@
       "编辑": "Edit",
       "添加": "Add New Person",
       "管理": "Manage"
-    }
+    },
+    "距离": "Distance (m)"
   },
   "编辑模态框": {
     "标题": "{title} - Edit",

@@ -20,7 +20,7 @@
         </div>
         <div class="distance-edit">
           <!-- 预设距离输入框 -->
-          <label class="input-label">{{ t('计算页面.预设距离') }}</label>
+          <label class="input-label">{{ t('计算页面.距离') }}</label>
           <input type="number" class="custom-input" v-model.number="distanceInput" placeholder="米" min="0" />
         </div>
       </div>
