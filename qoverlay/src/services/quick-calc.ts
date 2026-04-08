@@ -11,7 +11,8 @@ const CONSTANTS = {
     AVG_MOLAR_MASS: 110.0,  // 人体生物大分子平均摩尔质量 (g/mol)
     SKIN_DAILY_SHED: 1.5,   // 每天皮肤脱落质量 (g)
     BREATH_VOL: 0.5,        // 单次呼吸体积 (L)
-    BREATH_RATE: 28800      // 每日呼吸次数 (20次/分 * 1440分)
+    BREATH_RATE: 28800 ,     // 每日呼吸次数 (20次/分 * 1440分)
+    Q_PER_KG: 4e25
 };
 
 /**
@@ -75,4 +76,8 @@ export function calculateTotalOverlap(ageMin: number, distanceKm: number) {
         },
         formatted: (n1 + n2 + n3).toExponential(4) // 科学计数法格式化
     };
+}
+
+export function estimateTotalQuantum(weightKg: number, ) {
+    return weightKg * CONSTANTS.Q_PER_KG;
 }

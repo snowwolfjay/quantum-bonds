@@ -54,7 +54,8 @@
             <ion-card-title>{{ t('计算页面.快速.结果') }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <div class="result-value">{{ result.overlapAmount.toLocaleString('zh-CN', { maximumFractionDigits: 0 }) }}</div>
+            <div class="result-value">{{ result.overlapAmount.toLocaleString('zh-CN', { maximumFractionDigits: 0 }) }}
+            </div>
             <div class="result-description">
               {{ t('计算页面.快速.重叠描述') }}
             </div>
@@ -135,7 +136,8 @@ import { shareOutline, shareSharp } from 'ionicons/icons';
 import { calculateDistance, calculateQuickQuantumOverlap } from '../utils/quickCalc';
 import { drawShareContent, canvasToBase64, shareImage } from '../utils/shareUtils';
 import PersonInputComponent from './PersonInputComponent.vue';
-import { calculateTotalOverlap } from '@/services/quick-calc';
+import { calculateTotalOverlap, estimateTotalQuantum } from '@/services/quick-calc';
+import { injectDbService } from '@/services/dbService';
 
 // 国际化
 const { t } = useI18n();
@@ -252,7 +254,21 @@ const updatePersonB = (newPerson: Person) => {
   personB.value = { ...newPerson };
   errorMessage.value = '';
 };
+// 默认用户A为自己
 
+const db = injectDbService();
+db.watchPersons(users => {
+  if (!personA.value.name) {
+    const self = users.find(u => u.id === 'me');
+    if (self) {
+      personA.value.name = self.name;
+      personA.value.age = self.age;
+      personA.value.height = self.height;
+      personA.value.weight = self.weight;
+      personA.value.location = self.location;
+    }
+  }
+})
 
 watch(() => [personA.value, personB.value], () => {
   // 每当人员数据变化时，重置错误信息
@@ -298,6 +314,7 @@ const calculate = () => {
 
     // 更新结果并打开结果模态
     result.value.overlapAmount = val.total;
+    overlapPercentage.value = val.total / estimateTotalQuantum(personA.value.weight!,); // 确保结果不为负数
     isResultModalOpen.value = true;
   } catch (error) {
     console.error('计算错误:', error);
@@ -354,7 +371,9 @@ const renderShareCanvas = () => {
   const personBName = personB.value.name || t('计算页面.人员.B');
 
   // 绘制Canvas内容
-  drawShareContent(shareCanvas.value, personAName, personBName, result.value.overlapAmount, overlapPercentage.value);
+  drawShareContent(shareCanvas.value, personAName, personBName, result.value.overlapAmount, estimateTotalQuantum(
+    personA.value.weight!
+  ));
 };
 
 // 从Canvas分享

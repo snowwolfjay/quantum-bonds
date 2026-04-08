@@ -2,88 +2,60 @@
   <ion-list>
     <!-- 姓名输入 -->
     <ion-item>
-      <ion-input
-        v-model="localModel.name"
-        :label="t('计算页面.人员.称呼')"
-        :placeholder="t('初始化.姓名占位符')"
-        :error-text="errors.name"
-        :class="{
+      <ion-input v-model="localModel.name" :label="t('计算页面.人员.称呼')" :placeholder="t('初始化.姓名占位符')"
+        :error-text="errors.name" :class="{
           'ion-invalid': touched && !!errors.name,
           'ion-touched': touched,
-        }"
-        @input="onInput"
-      ></ion-input>
+        }" @input="onInput"></ion-input>
     </ion-item>
 
     <!-- 身高输入 -->
     <ion-item>
-      <ion-input
-        v-model.number="localModel.height"
-        :label="t('计算页面.人员.身高') + ' (cm)'"
-        type="number"
-        :placeholder="t('初始化.身高占位符')"
-        :error-text="errors.height"
-        :class="{
+      <ion-input v-model.number="localModel.height" :label="t('计算页面.人员.身高') + ' (cm)'" type="number"
+        :placeholder="t('初始化.身高占位符')" :error-text="errors.height" :class="{
           'ion-invalid': touched && !!errors.height,
           'ion-touched': touched,
-        }"
-        @input="onInput"
-      ></ion-input>
+        }" @input="onInput"></ion-input>
     </ion-item>
 
     <!-- 体重输入 -->
     <ion-item>
-      <ion-input
-        v-model.number="localModel.weight"
-        :label="t('计算页面.人员.体重') + ' (kg)'"
-        type="number"
-        :placeholder="t('初始化.体重占位符')"
-        :error-text="errors.weight"
-        :class="{
+      <ion-input v-model.number="localModel.weight" :label="t('计算页面.人员.体重') + ' (kg)'" type="number"
+        :placeholder="t('初始化.体重占位符')" :error-text="errors.weight" :class="{
           'ion-invalid': touched && !!errors.weight,
           'ion-touched': touched,
-        }"
-        @input="onInput"
-      ></ion-input>
+        }" @input="onInput"></ion-input>
     </ion-item>
 
     <!-- 年龄输入 -->
     <ion-item>
-      <ion-input
-        v-model.number="localModel.age"
-        :label="t('计算页面.人员.年龄') + ' (' + t('计算页面.人员.岁') + ')'"
-        type="number"
-        :placeholder="t('初始化.年龄占位符')"
-        :error-text="errors.age"
-        :class="{
+      <ion-input v-model.number="localModel.age" :label="t('计算页面.人员.年龄') + ' (' + t('计算页面.人员.岁') + ')'" type="number"
+        :placeholder="t('初始化.年龄占位符')" :error-text="errors.age" :class="{
           'ion-invalid': touched && !!errors.age,
           'ion-touched': touched,
-        }"
-        @input="onInput"
-      ></ion-input>
+        }" @input="onInput"></ion-input>
     </ion-item>
     <!-- 位置输入 -->
     <ion-item>
-      <ion-input
-        v-model="localModel.location"
-        :label="t('编辑模态框.位置')"
-        :placeholder="t('编辑模态框.位置占位符')"
-        :error-text="errors.location"
-        :class="{
+      <ion-input v-model="localModel.location" :label="t('编辑模态框.位置')" :placeholder="t('编辑模态框.位置占位符')"
+        :error-text="errors.location" :class="{
           'ion-invalid': touched && !!errors.location,
           'ion-touched': touched,
-        }"
-        @input="onInput"
-      ></ion-input>
+        }" @input="onInput"></ion-input>
+      <ion-button slot="end" fill="clear" @click="$emit('reset-touched')" @click.stop="locatePosition">
+        <ion-icon slot="icon-only" :icon="locationOutline"></ion-icon>
+
+      </ion-button>
     </ion-item>
   </ion-list>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, watchEffect } from "vue";
-import { IonList, IonItem, IonInput } from "@ionic/vue";
+import { IonList, IonItem, IonInput, IonButton, IonIcon } from "@ionic/vue";
 import { useI18n } from "vue-i18n";
 import { Person } from "../services/dbService";
+import { locationOutline } from "ionicons/icons";
 
 // 国际化
 const { t } = useI18n();
@@ -99,7 +71,17 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: Omit<Person, "id">): void;
   (e: "reset-touched"): void;
 }>();
-
+const locatePosition = () => {
+  import("../platform/geolocation/export").then(m => {
+    m.getCurrentPosition().then(position => {
+      const { latitude, longitude } = position.coords;
+      localModel.value.location = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+      onInput(); // 触发输入事件，更新父组件数据
+    }).catch(error => {
+      console.error("获取位置失败:", error);
+    });
+  })
+};
 // 本地模型，用于v-model双向绑定
 const localModel = ref<Omit<Person, "id">>({
   name: "",
@@ -200,4 +182,5 @@ const onInput = () => {
   emit("update:modelValue", { ...localModel.value });
   emit("reset-touched");
 };
+
 </script>

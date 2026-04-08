@@ -27,7 +27,7 @@ export function drawShareContent(
   personAName: string,
   personBName: string,
   overlapAmount: number,
-  overlapPercentage: number,
+  totalQuantum: number,
   appName: string = '量子联结'
 ): void {
   const ctx = canvas.getContext('2d');
@@ -58,23 +58,41 @@ export function drawShareContent(
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = '#1f355f';
-  ctx.font = `bold ${Math.round(width * 0.045)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
+  ctx.font = `bold ${Math.round(width * 0.035)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
+  [personAName, `与`, personBName, `的量子联结数量`].forEach((line, index) => {
+    // 第一行第三行使用较大字体，第二行第四行使用较小字体
+    let font = ctx.font;
+    let ratio = 0.035;
+    let color = '#1f355f';
+    if (index === 0 || index === 2) {
+      ratio = 0.07;
+      color = '#2566ff';
+    }
+    let fontSize = Math.round(width * ratio);
+    font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
+    currentY = wrapText(ctx, line, centerX, currentY, cardWidth - padding * 2, Math.round(width * 0.07), color, font);
+    currentY += 20;
+  });
 
-  const title = `${personAName}体内来自${personBName}的量子累计数量：`;
-  currentY = wrapText(ctx, title, centerX, currentY, cardWidth - padding * 2, Math.round(width * 0.065));
-  currentY += 20;
+  ctx.save();
+
+  // currentY += 20;
+  // ctx.beginPath();
+  // ctx.moveTo(padding + 60, currentY);
+  // ctx.lineTo(width - padding - 60, currentY);
+  // ctx.strokeStyle = '#e2e8f8';
+  // ctx.lineWidth = 2;
+  // ctx.stroke();
+  // currentY += 120;
 
   const formattedAmount = formatNumber(overlapAmount);
   ctx.fillStyle = '#2566ff';
   ctx.font = `bold ${Math.round(width * 0.12)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
-  ctx.fillText(formattedAmount, centerX, currentY);
+  // ctx.fillText(formattedAmount, centerX, currentY);
+  currentY = wrapText(
+    ctx, formattedAmount, centerX, currentY, cardWidth - padding * 2, Math.round(width * 0.14)
+  )
   currentY += Math.round(width * 0.14);
-
-  ctx.fillStyle = '#63718f';
-  ctx.font = `bold ${Math.round(width * 0.05)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
-  const percentageText = `${(overlapPercentage * 100).toFixed(4)}%`;
-  ctx.fillText(percentageText, centerX, currentY);
-  currentY += Math.round(width * 0.08);
 
   ctx.beginPath();
   ctx.moveTo(padding + 60, currentY);
@@ -84,14 +102,23 @@ export function drawShareContent(
   ctx.stroke();
   currentY += 40;
 
-  ctx.font = `${Math.round(width * 0.035)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
+
+  ctx.restore();
+  // ctx.fillStyle = '#63718f';
+  // ctx.font = `bold ${Math.round(width * 0.05)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
+  // const percentageText = ` ${((overlapAmount / totalQuantum) * 100)}%`;
+  // ctx.fillText(percentageText, centerX, currentY);
+  // currentY += Math.round(width * 0.08);
+
+
+  // ctx.font = `${Math.round(width * 0.035)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
   ctx.fillStyle = '#8f97b4';
-  ctx.fillText('数据来源于量子重叠计算工具', centerX, currentY);
+  // ctx.fillText('结果由“量子联结”APP快速计算得出，仅供参考', centerX, currentY);
 
   ctx.textAlign = 'right';
   ctx.font = `${Math.round(width * 0.028)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
-  ctx.fillText(appName, width - padding - 20, height - padding - 20);
+  // ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+  ctx.fillText(`结果由“${appName}”快速计算得出，仅供参考`, width - padding - 20, height - padding - 20);
 }
 
 function roundRect(
@@ -126,8 +153,13 @@ function wrapText(
   x: number,
   y: number,
   maxWidth: number,
-  lineHeight: number
+  lineHeight: number,
+  color?: string,
+  font?: string
 ): number {
+  ctx.save();
+  if (color) ctx.fillStyle = color;
+  if (font) ctx.font = font;
   const characters = Array.from(text);
   let line = '';
 
@@ -147,7 +179,7 @@ function wrapText(
     ctx.fillText(line, x, y);
     y += lineHeight;
   }
-
+  ctx.restore();
   return y;
 }
 
@@ -189,7 +221,7 @@ export function shareImage(
             text,
             files: [file] as File[]
           };
-          
+
           if (navigator.canShare(shareData)) {
             navigator.share(shareData)
               .then(() => {
@@ -206,13 +238,13 @@ export function shareImage(
               text,
               url: window.location.href
             })
-            .then(() => {
-              if (successCallback) successCallback();
-            })
-            .catch(error => {
-              if (errorCallback) errorCallback(error);
-              else console.error('分享失败:', error);
-            });
+              .then(() => {
+                if (successCallback) successCallback();
+              })
+              .catch(error => {
+                if (errorCallback) errorCallback(error);
+                else console.error('分享失败:', error);
+              });
           }
         }
       })
