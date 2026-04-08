@@ -26,9 +26,9 @@
       "分享": "Share Result",
       "分享渲染中": "Rendering share image...",
       "分享渲染说明": "The share image will be ready shortly so you can upload it immediately.",
-      "分享预览": "Share Preview",
       "立即分享": "Share Now"
     },
+    "预览": "Preview",
     "精确": {
       "标题": "Advanced",
       "副标题": "Enter detailed parameters to get precise quantum overlap results",
@@ -48,7 +48,8 @@
     "最小年龄占位符": "e.g., 18",
     "错误": {
       "人员重复": "Person A and Person B cannot be the same person",
-      "年龄未计算": "Please select two persons, the system will automatically calculate the minimum age"
+      "年龄未计算": "Please select two persons, the system will automatically calculate the minimum age",
+      "人员信息不完整": "Incomplete person information, please make sure both persons have weight and height filled in"
     },
     "人员": {
       "A": "Person A",

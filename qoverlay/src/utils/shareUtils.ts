@@ -83,7 +83,7 @@ export function drawShareContent(
   // ctx.strokeStyle = '#e2e8f8';
   // ctx.lineWidth = 2;
   // ctx.stroke();
-  // currentY += 120;
+  currentY += 120;
 
   const formattedAmount = formatNumber(overlapAmount);
   ctx.fillStyle = '#2566ff';
@@ -92,7 +92,7 @@ export function drawShareContent(
   currentY = wrapText(
     ctx, formattedAmount, centerX, currentY, cardWidth - padding * 2, Math.round(width * 0.14)
   )
-  currentY += Math.round(width * 0.14);
+  // currentY += Math.round(width * 0.14);
 
   ctx.beginPath();
   ctx.moveTo(padding + 60, currentY);

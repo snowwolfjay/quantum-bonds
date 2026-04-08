@@ -20,8 +20,8 @@
         </div>
         <div class="distance-edit">
           <!-- 预设距离输入框 -->
-          <label class="input-label">{{ t('计算页面.距离') }}</label>
-          <input type="number" class="custom-input" v-model.number="distanceInput" placeholder="米" min="0" />
+          <ion-input label-placement="floating" :label="t('计算页面.距离')" type="number" class="custom-input"
+            v-model.number="distanceInput" min="0" />
         </div>
       </div>
 
@@ -93,7 +93,7 @@
           </div>
 
           <div v-else class="share-preview-section">
-            <div class="share-preview-title">{{ t('计算页面.快速.分享预览') }}</div>
+            <div class="share-preview-title">{{ t('预览') }}</div>
             <img v-if="sharePreviewUrl" :src="sharePreviewUrl" alt="share preview" class="share-preview-image" />
             <div class="share-actions">
               <ion-button expand="block" color="primary" @click="shareFromCanvas">
@@ -124,6 +124,7 @@ import {
   IonButtons,
   IonButton,
   IonHeader,
+  IonInput,
   IonTitle,
   IonModal,
   IonText,
@@ -149,6 +150,7 @@ interface Person {
   weight: number | null;
   height: number | null;
   age: number | null;
+  id?: string;
 }
 
 // 定义结果数据结构
@@ -209,11 +211,11 @@ const overlapPercentage = ref(0);
 // 表单验证
 const isFormValid = () => {
   if (!personA.value.weight || !personA.value.height) {
-    errorMessage.value = t('计算页面.错误.人员A信息不完整');
+    errorMessage.value = t('计算页面.错误.人员信息不完整');
     return false;
   }
   if (!personB.value.weight || !personB.value.height) {
-    errorMessage.value = t('计算页面.错误.人员B信息不完整');
+    errorMessage.value = t('计算页面.错误.人员信息不完整');
     return false;
   }
   if (!distanceInput.value) {
@@ -261,11 +263,7 @@ db.watchPersons(users => {
   if (!personA.value.name) {
     const self = users.find(u => u.id === 'me');
     if (self) {
-      personA.value.name = self.name;
-      personA.value.age = self.age;
-      personA.value.height = self.height;
-      personA.value.weight = self.weight;
-      personA.value.location = self.location;
+      personA.value = { ...self };
     }
   }
 })

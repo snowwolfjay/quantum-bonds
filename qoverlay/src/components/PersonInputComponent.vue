@@ -9,7 +9,8 @@
           </div>
         </div>
         <ion-button fill="clear" color="primary" @click.stop="openPersonSelectModal">
-          <ion-icon slot="icon-only" :ios="personAddOutline" :md="personAddSharp"></ion-icon>
+          <ion-icon slot="icon-only" :ios="isSelectedPersion ? repeatOutline : personAddOutline"
+            :md="personAddSharp"></ion-icon>
         </ion-button>
       </div>
 
@@ -38,11 +39,7 @@
       </ion-header>
       <ion-content class="ion-padding">
         <div class="person-select-modal">
-          <PersonListComponent
-            mode="select"
-            :selectedPerson="props.person"
-            @select="selectPerson"
-          />
+          <PersonListComponent mode="select" :selectedPerson="props.person" @select="selectPerson" />
         </div>
       </ion-content>
     </ion-modal>
@@ -85,14 +82,14 @@
 
 <script setup lang="ts">
 import {
-  IonButton,
   IonIcon,
   IonModal,
   IonHeader,
+  IonButton,
   IonToolbar,
-  IonTitle,
   IonButtons,
   IonContent,
+  IonTitle,
   IonInput
 } from '@ionic/vue';
 import { ref, computed, onUnmounted } from 'vue';
@@ -100,7 +97,8 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import {
   personAddOutline,
-  personAddSharp
+  personAddSharp,
+  repeatOutline
 } from 'ionicons/icons';
 import { Person } from '../services/dbService';
 import PersonListComponent from './PersonListComponent.vue';
@@ -109,7 +107,7 @@ const { t } = useI18n();
 
 const props = defineProps<{
   title: string;
-  person: Omit<Person, 'id'>;
+  person: Omit<Person, 'id'> & { id?: string };
 }>();
 
 const emit = defineEmits<{
@@ -120,7 +118,7 @@ const router = useRouter();
 const isPersonSelectModalOpen = ref(false);
 const isPersonEditModalOpen = ref(false);
 const editPerson = ref<{ name: string; age: number | null }>({ name: '', age: null });
-
+const isSelectedPersion = computed(() => props.person.id)
 const isPersonSelected = computed(() => {
   return !!props.person.name || props.person.age != null;
 });
@@ -160,7 +158,7 @@ const savePersonInput = () => {
 
 const selectPerson = (p: Person) => {
   const { id, ...personData } = p;
-  emit('update', personData);
+  emit('update', {...p});
   closePersonSelectModal();
 };
 
@@ -370,8 +368,7 @@ ion-button {
 }
 
 .person-card-body {
-  padding: 16px;
-  cursor: pointer;
+  padding: 0 16px 16px;
 }
 
 
