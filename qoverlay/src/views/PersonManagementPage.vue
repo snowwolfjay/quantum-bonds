@@ -243,20 +243,20 @@ const initData = async () => {
 
 // 打开添加新人员模态框
 const addNewPerson = () => {
-  Object.assign(editingPerson, {
+  editingPerson.value = {
     name: "",
     location: "",
     weight: null,
     height: null,
     age: null,
-  });
+  };
   editingPersonId.value = null;
   isModalOpen.value = true;
 };
 
 // 打开编辑人员模态框
 const editPerson = (person: Person) => {
-  Object.assign(editingPerson, { ...person });
+  editingPerson.value = { ...person };
   editingPersonId.value = person.id;
   isModalOpen.value = true;
 };
