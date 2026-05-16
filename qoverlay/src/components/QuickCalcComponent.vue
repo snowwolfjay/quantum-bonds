@@ -301,7 +301,7 @@ const calculate = () => {
       personA: {
         location: locationA,
         weight: personA.value.weight || weight,
-        height: personA.value.height  || height
+        height: personA.value.height || height
       },
       personB: {
         location: locationB,
@@ -318,7 +318,7 @@ const calculate = () => {
     isResultModalOpen.value = true;
   } catch (error) {
     console.error('计算错误:', error);
-    alert(t('错误.计算失败'));
+    errorMessage.value = t('错误.计算失败');
   }
 };
 
@@ -389,13 +389,12 @@ const shareFromCanvas = () => {
     imageUrl,
     () => {
       // 分享成功
-      alert(t('分享.已复制'));
       closeShareModal();
     },
     (error) => {
       // 分享失败
       console.error('分享失败:', error);
-      alert(t('分享.已复制'));
+
       closeShareModal();
     }
   );

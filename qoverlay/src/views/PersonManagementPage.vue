@@ -18,40 +18,20 @@
 
       <ion-grid>
         <ion-row>
-          <ion-col
-            size="12"
-            size-md="8"
-            offset-md="2"
-            class="content-container"
-          >
+          <ion-col size="12" size-md="8" offset-md="2" class="content-container">
             <!-- 添加新人员按钮 -->
-            <ion-button
-              expand="block"
-              color="primary"
-              @click="addNewPerson"
-              class="add-person-button"
-            >
-              <ion-icon
-                slot="start"
-                :ios="addCircleOutline"
-                :md="addCircleSharp"
-              ></ion-icon>
+            <ion-button expand="block" color="primary" @click="addNewPerson" class="add-person-button">
+              <ion-icon slot="start" :ios="addCircleOutline" :md="addCircleSharp"></ion-icon>
               {{ t("人员管理页面.添加人员") }}
             </ion-button>
 
             <!-- 人员列表 -->
             <ion-list>
-              <ion-item
-                v-for="person in persons"
-                :key="person.id"
-                class="person-list-item"
-              >
+              <ion-item v-for="person in persons" :key="person.id" class="person-list-item">
                 <ion-avatar slot="start">
-                  <img
-                    :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      person.name || '?'
-                    )}&background=random&color=fff&size=64`"
-                  />
+                  <img :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    person.name || '?'
+                  )}&background=random&color=fff&size=64`" />
                 </ion-avatar>
                 <ion-label>
                   <h2>{{ person.name || t("计算页面.人员.未命名") }}</h2>
@@ -88,20 +68,11 @@
 
             <!-- 空状态提示 -->
             <div v-if="persons.length === 0" class="empty-state">
-              <ion-icon
-                :ios="personOutline"
-                :md="personSharp"
-                size="large"
-                color="medium"
-              ></ion-icon>
+              <ion-icon :ios="personOutline" :md="personSharp" size="large" color="medium"></ion-icon>
               <h3>{{ t("人员管理页面.空状态.标题") }}</h3>
               <p>{{ t("人员管理页面.空状态.描述") }}</p>
               <ion-button expand="block" color="primary" @click="addNewPerson">
-                <ion-icon
-                  slot="start"
-                  :ios="addCircleOutline"
-                  :md="addCircleSharp"
-                ></ion-icon>
+                <ion-icon slot="start" :ios="addCircleOutline" :md="addCircleSharp"></ion-icon>
                 {{ t("人员管理页面.添加第一个人员") }}
               </ion-button>
             </div>
@@ -117,38 +88,23 @@
           <ion-title>{{
             editingPersonId
               ? t("编辑模态框.标题", {
-                  title: editingPerson.name || t("计算页面.人员.未命名"),
-                })
+                title: editingPerson.name || t("计算页面.人员.未命名"),
+              })
               : t("人员管理页面.添加人员")
           }}</ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <info-input-component
-          ref="infoInputRef"
-          v-model="editingPerson"
-          :touched="isTouched"
-          @reset-touched="isTouched = false"
-        ></info-input-component>
+        <info-input-component ref="infoInputRef" v-model="editingPerson" :touched="isTouched"
+          @reset-touched="isTouched = false"></info-input-component>
       </ion-content>
       <ion-footer>
         <ion-toolbar class="footer-toolbar">
           <div class="flex">
-            <ion-button
-              @click="closeModal"
-              expand="block"
-              color="medium"
-              fill="clear"
-              class="footer-button"
-              >{{ t("编辑模态框.取消") }}</ion-button
-            >
-            <ion-button
-              @click="savePerson"
-              color="primary"
-              expand="block"
-              class="footer-button"
-              >{{ t("编辑模态框.确认") }}</ion-button
-            >
+            <ion-button @click="closeModal" expand="block" color="medium" fill="clear" class="footer-button">{{
+              t("编辑模态框.取消") }}</ion-button>
+            <ion-button @click="savePerson" color="primary" expand="block" class="footer-button">{{ t("编辑模态框.确认")
+              }}</ion-button>
           </div>
         </ion-toolbar>
       </ion-footer>
@@ -237,7 +193,7 @@ const initData = async () => {
     });
   } catch (error) {
     console.error("Failed to initialize data:", error);
-    alert(t("错误.计算失败"));
+
   }
 };
 
@@ -293,7 +249,6 @@ const savePerson = async () => {
     closeModal();
   } catch (error) {
     console.error("Failed to save person:", error);
-    alert(t("错误.计算失败"));
   }
 };
 
@@ -330,13 +285,16 @@ onUnmounted(() => {
 ion-list {
   margin-bottom: 20px;
 }
+
 .flex {
   display: flex;
   width: 100%;
+
   ion-button {
     flex: 1;
   }
 }
+
 /* 人员列表项样式 */
 .person-list-item {
   --padding-start: 16px;
