@@ -21,8 +21,8 @@
           <ion-col size="12" size-md="8" offset-md="2">
             <ion-card>
               <ion-card-content>
-                <h2>{{ t('条款页面.标题') }}</h2>
-                <p>{{ t('条款页面.更新日期') }}：2025年12月13日</p>
+                <!-- <h2>{{ t('条款页面.标题') }}</h2> -->
+                <p>{{ t('条款页面.更新日期') }}：2026-05-16</p>
                 
                 <h3>{{ t('条款.引言.标题') }}</h3>
                 <p>{{ t('条款.引言.第一段') }}</p>
@@ -76,7 +76,7 @@
                 
                 <h3>{{ t('条款.联系我们.标题') }}</h3>
                 <p>{{ t('条款.联系我们.内容') }}</p>
-                <p>{{ t('条款.联系我们.邮箱') }}：terms@quantum-overlay.example</p>
+                <p>{{ t('条款.联系我们.邮箱') }}： snowolfjay@qq.com </p>
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -133,7 +133,7 @@ p {
 }
 
 ul {
-  margin-left: 20px;
+  /* margin-left: 20px; */
   margin-bottom: 15px;
 }
 
