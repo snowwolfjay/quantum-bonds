@@ -16,26 +16,14 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12" size-md="8" offset-md="2">
-            <ion-card>
-              <ion-card-content>
-                <h2>{{ t('名词解释页面.标题') }}</h2>
-                
-                <ion-list>
-                  <ion-item lines="inset" v-for="(term, index) in glossaryTerms" :key="index">
-                    <ion-label>
-                      <h3>{{ t(`名词解释.${term.key}.术语`) }}</h3>
-                      <p class="term-description">{{ t(`名词解释.${term.key}.描述`) }}</p>
-                    </ion-label>
-                  </ion-item>
-                </ion-list>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <ion-list>
+        <ion-item lines="inset" v-for="(term, index) in glossaryTerms" :key="index">
+          <ion-label>
+            <h3>{{ t(`名词解释.${term.key}.术语`) }}</h3>
+            <p class="term-description">{{ t(`名词解释.${term.key}.描述`) }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
