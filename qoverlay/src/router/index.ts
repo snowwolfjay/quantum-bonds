@@ -43,6 +43,10 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("../views/PersonManagementPage.vue"),
   },
   {
+    path:"/qshift",
+    component: () => import("../views/QShiftTestPage.vue"),
+  },
+  {
     path:"/:pathMatch(.*)*",
     redirect:"/main"
   }
