@@ -377,5 +377,42 @@
     "位置格式错误": "Invalid location format, please enter valid coordinates (e.g., 39.9042, 116.4074)",
     "确认": "Confirm",
     "加载中": "Initializing application..."
-  }
+  },
+  "参考文献": [
+    {
+      "title": "The Disappearing Spoon & Caesar’s Last Breath",
+      "author": "Sam Kean",
+      "code": "ISBN: 9787559672285",
+      "content": "If someone tells you that the air you breathe contains Caesar's last breath, Cleopatra's perfume, a dinosaur's roar, particles from atomic bombs, and even cosmic dust, would you find it incredible?"
+    },{
+      "title": "Human-related volatile organic compound emissions and chemistry in indoor environments",
+      "author": "Ruixiu Jiang ,Rui Zhang",
+      "code": " Cell Reports Physical Science (Volume 6, Issue 11, 19 November 2025, 102962)",
+      "content": "Indoor air quality is impacted by human-related volatile organic compounds (VOCs) through dual pathways: direct emissions from breath and skin, and chemical reactions such as ozone-initiated oxidation of skin lipids. "
+    },
+     {
+      "title": "Atmospheric Chemistry and Physics: From Air Pollution to Climate Change",
+      "author": "John H. Seinfeld, Spyros N. Pandis ",
+      "code": "ISBN: 1118947401",
+      "content": "Diffusion calculations of particles in the atmosphere."
+    },
+    {
+      "title": "Semivolatile organic compounds in indoor environments",
+      "author": "Charles J. Weschler",
+      "code": "Atmospheric Environment(Volume 42, Issue 40, December 2008, Pages 9018-9040)",
+      "content": "Research indicates that the accumulation of semivolatile organic compounds (SVOCs) due to direct air transmission to the human body can be substantial; among them, the absorption of SVOCs by human skin, hair, and clothing has the highest indoor air processing rate, reaching up to 10–20 m³/h."
+    },
+    {
+      "title": "The Exchange Principle in Forensics",
+      "author": "Locard, E",
+      "code": "",
+      "content": "The principle of material exchange in forensics, serving as a fundamental reference for contact transfer models."
+    },
+    {
+      "title": "Six Degrees of Separation - The Science of a Connected Age",
+      "author": "Stanley Milgram",
+      "code": "",
+      "content": "You and any stranger you meet are separated by no more than six people, meaning you can know any stranger through at most six people. This serves as a reference for grid models used in close-contact exchanges."
+    }
+  ]
 }

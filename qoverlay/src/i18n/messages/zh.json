@@ -377,5 +377,42 @@
     "位置格式错误": "位置格式错误，请输入有效的经纬度格式(例如：39.9042, 116.4074)",
     "确认": "确认",
     "加载中": "正在初始化应用..."
-  }
+  },
+  "参考文献": [
+    {
+      "title": "恺撒的最后一口气",
+      "author": "[美]山姆·基恩",
+      "code": "ISBN: 9787559672285",
+      "content": "如果有人告诉你，我们呼吸的空气中包含了恺撒临终前的最后一口气、埃及艳后的香水、恐龙的咆哮、原子弹释放的微粒乃至宇宙的星尘，是否会觉得匪夷所思？"
+    },{
+      "title": "Human-related volatile organic compound emissions and chemistry in indoor environments",
+      "author": "Ruixiu Jiang ,Rui Zhang",
+      "code": " Cell Reports Physical Science (Volume 6, Issue 11, 19 November 2025, 102962)",
+      "content": "室内空气质量受人为挥发性有机化合物（VOCs）的影响，其作用途径主要有两条：一是来自呼吸和皮肤的直接排放；二是诸如臭氧引发的皮肤脂质氧化等化学反应。"
+    },
+    {
+      "title": "Atmospheric Chemistry and Physics: From Air Pollution to Climate Change",
+      "author": "John H. Seinfeld, Spyros N. Pandis ",
+      "code": "ISBN: 1118947401",
+      "content": "微粒在大气中的扩散计算。"
+    },
+    {
+      "title": "Semivolatile organic compounds in indoor environments",
+      "author": "Charles J. Weschler",
+      "code": "Atmospheric Environment(Volume 42, Issue 40, December 2008, Pages 9018-9040)",
+      "content": "研究表明，经由空气直接向人体传输所导致的半挥发性有机化合物（SVOCs）累积量可能相当可观；其中，人体皮肤、毛发及衣物对 SVOCs 的吸收，其室内空气处理速率最高可达 10–20 m³/h。"
+    },
+    {
+      "title": "The Exchange Principle in Forensics",
+      "author": "Locard, E",
+      "code": "",
+      "content": "法医学中的物质交换规律，作为接触转移模型基础参考"
+    },
+    {
+      "title": "Six Degrees of Separation - The Science of a Connected Age",
+      "author": "Stanley Milgram",
+      "code": "",
+      "content": "你和任何一个陌生人之间所间隔的人不会超过六个，也就是说，最多通过六个人你就能够认识任何一个陌生人。用于近距离接触交换的网格模型参考"
+    }
+  ]
 }

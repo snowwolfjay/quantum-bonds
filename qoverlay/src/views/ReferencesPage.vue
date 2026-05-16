@@ -16,28 +16,16 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12" size-md="8" offset-md="2">
-            <ion-card>
-              <ion-card-content>
-                <h2>{{ t('参考文献页面.标题') }}</h2>
-                
-                <ion-list>
-                  <ion-item lines="inset" v-for="(reference, index) in references" :key="index">
-                    <ion-label>
-                      <h3>{{ reference.title }}</h3>
-                      <p>{{ reference.author }} - {{ reference.year }}</p>
-                      <p class="reference-content">{{ reference.content }}</p>
-                      <p class="reference-link"><a :href="reference.link" target="_blank">{{ reference.link }}</a></p>
-                    </ion-label>
-                  </ion-item>
-                </ion-list>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <ion-list>
+        <ion-item lines="inset" v-for="(reference, index) in references" :key="index">
+          <ion-label>
+            <h3>{{ reference.title }}</h3>
+            <p>{{ reference.author }} </p>
+            <p v-if="reference.code">{{ reference.code }}</p>
+            <p class="reference-content">{{ reference.content }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -60,11 +48,12 @@ import {
   IonItem,
   IonLabel
 } from '@ionic/vue';
-import { ref } from 'vue';
+import { compute } from 'three/src/nodes/gpgpu/ComputeNode';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 // 国际化
-const { t } = useI18n();
+const { t, ...rest } = useI18n();
 
 // 定义参考文献数据结构
 interface Reference {
@@ -72,33 +61,13 @@ interface Reference {
   author: string;
   year: string;
   content: string;
-  link: string;
+  code: string;
 }
 
 // 模拟参考文献数据
-const references = ref<Reference[]>([
-  {
-    title: "量子力学基础",
-    author: "张三",
-    year: "2023",
-    content: "本书介绍了量子力学的基本概念和原理，包括波粒二象性、不确定性原理等。",
-    link: "https://example.com/reference1"
-  },
-  {
-    title: "人体量子交换机制",
-    author: "李四",
-    year: "2024",
-    content: "研究了人体之间量子交换的可能机制和影响因素。",
-    link: "https://example.com/reference2"
-  },
-  {
-    title: "量子重叠计算模型",
-    author: "王五",
-    year: "2025",
-    content: "提出了一种计算人与人之间量子重叠的数学模型。",
-    link: "https://example.com/reference3"
-  }
-]);
+const references = computed(() => (rest.messages.value[rest.locale.value as any]['参考文献'] || []) as Reference[]);
+
+console.log('参考文献数据:', references, rest.messages);
 </script>
 
 <style scoped>
