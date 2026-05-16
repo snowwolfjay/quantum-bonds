@@ -37,18 +37,12 @@ import {
   IonToolbar,
   IonButtons,
   IonMenuButton,
-  IonTitle,
   IonContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardContent,
+  IonTitle,
   IonList,
   IonItem,
   IonLabel
 } from '@ionic/vue';
-import { compute } from 'three/src/nodes/gpgpu/ComputeNode';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -91,6 +85,7 @@ h3 {
 .reference-content {
   margin: 10px 0;
   line-height: 1.6;
+  color: var(--ion-text-color);
 }
 
 .reference-link {
@@ -98,12 +93,8 @@ h3 {
   font-size: 14px;
 }
 
-.reference-link a {
+.reference-link .desc {
   color: var(--ion-color-primary);
   text-decoration: none;
-}
-
-.reference-link a:hover {
-  text-decoration: underline;
 }
 </style>
