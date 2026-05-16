@@ -5,7 +5,7 @@
         <ion-buttons slot="start">
           <ion-menu-button color="primary"></ion-menu-button>
         </ion-buttons>
-        <ion-title>{{ $t('计算页面.标题') }}</ion-title>
+        <ion-title>{{ $t('导航菜单.页面.计算器') }}</ion-title>
         <!-- <ion-segment v-model="calculationMode" color="primary" disabled>
                   <ion-segment-button value="quick">
                     <ion-label>{{ $t('计算页面.快速.标题') }}</ion-label>
@@ -19,7 +19,7 @@
 
     <ion-content :fullscreen="true" class="main-calc-page">
       <div class="scene-overlay">
-        <ParticalFlow />
+        <QuantumShifts />
       </div>
       <!-- 速算版本组件 -->
       <QuickCalcComponent v-if="calculationMode === 'quick'" />
@@ -39,16 +39,11 @@ import {
   IonButtons,
   IonMenuButton,
   IonContent,
-  IonGrid,
-  IonRow,
-  IonCol
 } from '@ionic/vue';
 import { ref } from 'vue';
 import QuickCalcComponent from '../components/QuickCalcComponent.vue';
 import PreciseCalcComponent from '../components/PreciseCalcComponent.vue';
-import QuantumParticleScene from '../components/QuantumParticleScene.vue';
-import ParticalFlow from '@/feat/particalEffect/ParticalFlow.vue';
-
+import QuantumShifts from '@/components/QuantumShifts.vue';
 // 定义计算模式类型
 type CalculationMode = 'quick' | 'precise';
 
@@ -73,7 +68,7 @@ const calculationMode = ref<CalculationMode>('quick');
   inset: 0;
   height: 100%;
   width: 100%;
-  z-index: 1;
+  z-index: -1;
   pointer-events: none;
 }
 

@@ -210,14 +210,14 @@ const overlapPercentage = ref(0);
 
 // 表单验证
 const isFormValid = () => {
-  if (!personA.value.weight || !personA.value.height) {
-    errorMessage.value = t('计算页面.错误.人员信息不完整');
-    return false;
-  }
-  if (!personB.value.weight || !personB.value.height) {
-    errorMessage.value = t('计算页面.错误.人员信息不完整');
-    return false;
-  }
+  // if (!personA.value.weight || !personA.value.height) {
+  //   errorMessage.value = t('计算页面.错误.人员信息不完整');
+  //   return false;
+  // }
+  // if (!personB.value.weight || !personB.value.height) {
+  //   errorMessage.value = t('计算页面.错误.人员信息不完整');
+  //   return false;
+  // }
   if (!distanceInput.value) {
     errorMessage.value = t('计算页面.错误.距离未设置');
     return false;
@@ -293,18 +293,20 @@ const calculate = () => {
       minimumAge.value!,
       distanceInput.value / 1000
     )
+    const weight = 50;
+    const height = 160;
     console.log('计算得到的总重叠量:', val);
     // 执行计算
     const overlapAmount = calculateQuickQuantumOverlap({
       personA: {
         location: locationA,
-        weight: personA.value.weight!,
-        height: personA.value.height!
+        weight: personA.value.weight || weight,
+        height: personA.value.height  || height
       },
       personB: {
         location: locationB,
-        weight: personB.value.weight!,
-        height: personB.value.height!
+        weight: personB.value.weight! || weight,
+        height: personB.value.height! || height
       },
       minimumAge: minimumAge.value!,
       distance: distanceInput.value

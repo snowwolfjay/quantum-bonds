@@ -128,21 +128,33 @@ const appPages = [
     mdIcon: personSharp,
   },
 
-  {
-    key: "反馈",
-    url: "/feedback",
-    iosIcon: chatbubbleOutline,
-    mdIcon: chatbubbleSharp,
-  },
-  {
-    key: "赞助",
-    url: "/sponsor",
-    iosIcon: heartOutline,
-    mdIcon: heartSharp,
-  },
+  // {
+  //   key: "反馈",
+  //   url: "/feedback",
+  //   iosIcon: chatbubbleOutline,
+  //   mdIcon: chatbubbleSharp,
+  // },
+  // {
+  //   key: "赞助",
+  //   url: "/sponsor",
+  //   iosIcon: heartOutline,
+  //   mdIcon: heartSharp,
+  // },
 ];
 
 const docPages = [
+  {
+    key: "参考文献",
+    url: "/references",
+    iosIcon: bookOutline,
+    mdIcon: bookSharp,
+  },
+  {
+    key: "名词解释",
+    url: "/glossary",
+    iosIcon: helpCircleOutline,
+    mdIcon: helpCircleSharp,
+  },
   {
     key: "关于我们",
     url: "/about",
@@ -160,18 +172,6 @@ const docPages = [
     url: "/terms",
     iosIcon: documentTextOutline,
     mdIcon: documentTextSharp,
-  },
-  {
-    key: "参考文献",
-    url: "/references",
-    iosIcon: bookOutline,
-    mdIcon: bookSharp,
-  },
-  {
-    key: "名词解释",
-    url: "/glossary",
-    iosIcon: helpCircleOutline,
-    mdIcon: helpCircleSharp,
   },
 ]
 

@@ -351,6 +351,11 @@ ion-button {
 }
 
 .person-card {
+  background-color: rgba(var(--ion-color-light-rgb), 0.8);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  overflow: hidden;
   border: 1px solid var(--ion-border-color, #e0e0e0);
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
