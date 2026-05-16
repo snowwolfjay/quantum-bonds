@@ -21,7 +21,7 @@
               <ion-card-content>
                 <p>{{ t('关于页面.项目介绍.第一段') }}</p>
                 <p>{{ t('关于页面.项目介绍.第二段') }}</p>
-                <p>{{ t('关于页面.项目介绍.第三段') }}</p>
+                <p v-html="t('关于页面.项目介绍.第三段')"></p>
                 <p>{{ t('关于页面.项目介绍.第四段') }}</p>
               </ion-card-content>
             </ion-card>
@@ -36,13 +36,13 @@
                   <ion-item>
                     <ion-icon slot="start" :ios="mailOutline" :md="mailSharp" color="primary"></ion-icon>
                     <ion-label>{{ t('关于页面.联系作者.邮箱') }}</ion-label>
-                    <ion-note slot="end">contact@quantum-overlay.example</ion-note>
+                    <ion-note slot="end">snowolfjay@qq.com</ion-note>
                   </ion-item>
-                  <ion-item>
+                  <!-- <ion-item>
                     <ion-icon slot="start" :ios="logoGithub" :md="logoGithub" color="primary"></ion-icon>
                     <ion-label>GitHub</ion-label>
-                    <ion-note slot="end">github.com/quantum-overlay</ion-note>
-                  </ion-item>
+                    <ion-note slot="end">github.com/snoww</ion-note>
+                  </ion-item> -->
                 </ion-list>
               </ion-card-content>
             </ion-card>
@@ -54,8 +54,8 @@
               </ion-card-header>
               <ion-card-content>
                 <p>{{ t('关于页面.开源协议.第一段') }}</p>
-                <p>{{ t('关于页面.开源协议.第二段') }}</p>
-                <p>{{ t('关于页面.开源协议.第三段') }}</p>
+                <!-- <p>{{ t('关于页面.开源协议.第二段') }}</p>
+                <p>{{ t('关于页面.开源协议.第三段') }}</p> -->
               </ion-card-content>
             </ion-card>
           </ion-col>
